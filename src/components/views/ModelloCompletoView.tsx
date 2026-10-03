@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import { 
   MasterODS, 
   MembroBrigata, 
-  PiattoMenu, 
   AllergeneDieta, 
   VoceMateriale, 
-  ContenitoreMaster,
   FormatoEvento
 } from '../../types/ods';
 import { 
@@ -20,9 +18,7 @@ import {
   Package, 
   Truck, 
   Shield, 
-  CheckCircle,
   FileCheck,
-  ChevronRight
 } from 'lucide-react';
 
 interface ModelloCompletoViewProps {
@@ -33,8 +29,6 @@ interface ModelloCompletoViewProps {
 export const ModelloCompletoView: React.FC<ModelloCompletoViewProps> = ({ ods, onUpdateODS }) => {
   const [activeSection, setActiveSection] = useState<string>('scheda');
   const [brigataSearch, setBrigataSearch] = useState<string>('');
-  const [materialeCategoriaFilter, setMaterialeCategoriaFilter] = useState<string>('Tutti');
-  const [materialeSearch, setMaterialeSearch] = useState<string>('');
 
   // Toggle optional module
   const toggleModulo = (modKey: keyof MasterODS['moduliAttivi']) => {
@@ -466,7 +460,7 @@ export const ModelloCompletoView: React.FC<ModelloCompletoViewProps> = ({ ods, o
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200">
-                  {ods.timelineFasi.map((f, idx) => (
+                  {ods.timelineFasi.map((f) => (
                     <tr key={f.codice}>
                       <td className="p-2 border-r border-slate-300 font-mono font-bold text-center text-slate-900">{f.codice}</td>
                       <td className="p-1 border-r border-slate-300">
@@ -833,8 +827,6 @@ export const ModelloCompletoView: React.FC<ModelloCompletoViewProps> = ({ ods, o
             </h2>
             <div className="space-y-4">
               {ods.postazioni.filter((p) => p.attiva).map((p) => {
-                const resp = ods.brigata.find((b) => b.id === p.responsabileId);
-
                 return (
                   <div key={p.codice} className="border border-slate-300 rounded-lg p-4 bg-slate-50/50">
                     <div className="flex flex-wrap justify-between items-center gap-2 border-b border-slate-200 pb-2 mb-3">

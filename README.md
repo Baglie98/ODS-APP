@@ -26,5 +26,6 @@ npm run preview    # serve dist/ su http://localhost:4173
 ## Dati
 
 - Gli ODS sono salvati nel browser del dispositivo: non si sincronizzano tra dispositivi diversi.
+- Al primo avvio l'app parte con un ODS vuoto da compilare. Menu ⋮ → **Carica ODS di Esempio** aggiunge i due modelli dimostrativi (Buffet 200 pax, Placé Servito) senza toccare i tuoi ODS.
 - Menu ⋮ → **Backup Archivio (JSON)** per esportare, **Importa Archivio** per ricaricare (gli ODS con lo stesso ID vengono sovrascritti, non duplicati).
 - Menu ⋮ → **Elimina ODS Corrente** per rimuovere un ordine.

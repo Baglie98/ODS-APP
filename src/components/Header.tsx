@@ -34,7 +34,7 @@ interface HeaderProps {
   onDuplicateCurrentEvent?: () => void;
   onExportJSON?: () => void;
   onImportJSON?: (importedEvents: MasterODS[]) => void;
-  onResetSampleData?: () => void;
+  onLoadSampleData?: () => void;
   onDeleteCurrentEvent?: () => void;
 }
 
@@ -50,7 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
   onDuplicateCurrentEvent,
   onExportJSON,
   onImportJSON,
-  onResetSampleData,
+  onLoadSampleData,
   onDeleteCurrentEvent,
 }) => {
   const currentEvent = events.find((e) => e.id === currentEventId) || events[0];
@@ -335,18 +335,18 @@ export const Header: React.FC<HeaderProps> = ({
                 </div>
               )}
 
-              {onResetSampleData && (
+              {onLoadSampleData && (
                 <button
                   onClick={() => {
-                    onResetSampleData();
+                    onLoadSampleData();
                     setMobileMenuOpen(false);
                   }}
                   className="w-full flex items-center gap-3 p-3 bg-slate-900/90 hover:bg-slate-800 rounded-lg text-left font-medium min-h-[44px] border border-slate-800/80 cursor-pointer text-amber-300"
                 >
                   <RotateCcw className="w-4 h-4 shrink-0" />
                   <div>
-                    <div className="font-semibold">Ripristina Modelli ODS di Esempio</div>
-                    <div className="text-[11px] text-slate-400">Ricarica i format completi preimpostati (Buffet & Placé)</div>
+                    <div className="font-semibold">Carica ODS di Esempio</div>
+                    <div className="text-[11px] text-slate-400">Aggiunge Buffet 200 pax e Placé Servito, senza toccare i tuoi ODS</div>
                   </div>
                 </button>
               )}

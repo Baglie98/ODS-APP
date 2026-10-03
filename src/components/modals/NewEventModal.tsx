@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { MasterODS, FormatoEvento } from '../../types/ods';
 import { sampleEvents } from '../../data/sampleEvents';
 import { createBlankODS } from '../../utils/odsFactory';
-import { X, Sparkles, Plus, FileEdit } from 'lucide-react';
+import { X, Plus, FileEdit } from 'lucide-react';
 
 interface NewEventModalProps {
   isOpen: boolean;

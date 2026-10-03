@@ -4,7 +4,6 @@ import { X, Share2, PlusSquare, Smartphone, CheckCircle, Sparkles } from 'lucide
 interface PWAInstallModalProps {
   isOpen: boolean;
   onClose: () => void;
-  isIOS: boolean;
   onInstallChromium?: () => void;
   isInstallableChromium?: boolean;
 }
@@ -12,7 +11,6 @@ interface PWAInstallModalProps {
 export const PWAInstallModal: React.FC<PWAInstallModalProps> = ({
   isOpen,
   onClose,
-  isIOS,
   onInstallChromium,
   isInstallableChromium,
 }) => {

@@ -11,8 +11,6 @@ import {
   Clock, 
   CheckCircle2, 
   Check, 
-  Sparkles,
-  MessageCircle,
   PlayCircle
 } from 'lucide-react';
 
@@ -104,7 +102,6 @@ export const InServizioView: React.FC<InServizioViewProps> = ({ ods, onUpdateODS
       f.codice === codice ? { ...f, oraReale: nowHHMM, completata: true } : f
     );
     onUpdateODS({ ...ods, timelineFasi: updated });
-    const faseNome = ods.timelineFasi.find((f) => f.codice === codice)?.nome || codice;
     showToast(`${codice} registrato alle ${nowHHMM}`);
   };
 
