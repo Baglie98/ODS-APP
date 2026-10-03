@@ -13,15 +13,18 @@ import { RevisionModal } from './components/modals/RevisionModal';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { OfflineIndicator } from './components/OfflineIndicator';
 
+const STORAGE_KEY = 'ods_catering_events';
+
 export default function App() {
   const [events, setEvents] = useState<MasterODS[]>(() => {
-    const saved = localStorage.getItem('ods_catering_events');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        console.error('Error loading saved events', e);
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       }
+    } catch (e) {
+      console.error('Error loading saved events', e);
     }
     return sampleEvents;
   });
@@ -33,7 +36,12 @@ export default function App() {
 
   // Sync to local storage
   useEffect(() => {
-    localStorage.setItem('ods_catering_events', JSON.stringify(events));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
+    } catch (e) {
+      console.error('Error saving events', e);
+      window.alert('Impossibile salvare i dati sul dispositivo (memoria piena o navigazione privata). Esporta un backup JSON.');
+    }
   }, [events]);
 
   const currentEvent = events.find((e) => e.id === currentEventId) || events[0];
@@ -80,15 +88,28 @@ export default function App() {
 
   const handleImportJSON = (importedEvents: MasterODS[]) => {
     if (!importedEvents || importedEvents.length === 0) return;
-    setEvents((prev) => [...importedEvents, ...prev]);
+    // Imported ODS replace existing ones with the same id, so re-importing a backup never duplicates entries
+    const importedIds = new Set(importedEvents.map((ev) => ev.id));
+    setEvents((prev) => [...importedEvents, ...prev.filter((ev) => !importedIds.has(ev.id))]);
     setCurrentEventId(importedEvents[0].id);
+  };
+
+  const handleDeleteCurrentEvent = () => {
+    if (!currentEvent) return;
+    if (events.length <= 1) {
+      window.alert("Non puoi eliminare l'unico ODS presente: creane prima uno nuovo.");
+      return;
+    }
+    if (!window.confirm(`Eliminare definitivamente ODS n° ${currentEvent.scheda.odsNumero} · ${currentEvent.scheda.eventoNomeTipo}?`)) return;
+    const remaining = events.filter((ev) => ev.id !== currentEvent.id);
+    setEvents(remaining);
+    setCurrentEventId(remaining[0].id);
   };
 
   const handleResetSampleData = () => {
     if (window.confirm('Vuoi ripristinare i modelli ODS di esempio originali (Buffet 200 pax e Placé Servito)?')) {
       setEvents(sampleEvents);
       setCurrentEventId(sampleEvents[0].id);
-      localStorage.setItem('ods_catering_events', JSON.stringify(sampleEvents));
     }
   };
 
@@ -113,13 +134,14 @@ export default function App() {
         onExportJSON={handleExportJSON}
         onImportJSON={handleImportJSON}
         onResetSampleData={handleResetSampleData}
+        onDeleteCurrentEvent={handleDeleteCurrentEvent}
       />
 
       {/* Real-time "Fonte Unica" Consistency & Integrity Audit Bar */}
       {currentEvent && <ConsistencyAuditBar ods={currentEvent} />}
 
       {/* Main Viewport Content */}
-      <main className="flex-1 w-full pb-24 lg:pb-12 pt-2">
+      <main className="flex-1 w-full pb-24 xl:pb-12 pt-2">
         {currentEvent ? (
           <>
             {activeTab === 'modello_completo' && (

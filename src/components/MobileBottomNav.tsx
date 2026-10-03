@@ -25,7 +25,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ activeTab, onT
   return (
     <nav 
       aria-label="Navigazione mobile ODS"
-      className="fixed bottom-0 left-0 right-0 z-40 bg-[#090e17]/95 backdrop-blur-md border-t border-slate-800 lg:hidden no-print pb-safe"
+      className="fixed bottom-0 left-0 right-0 z-40 bg-[#090e17]/95 backdrop-blur-md border-t border-slate-800 xl:hidden no-print pb-safe"
     >
       <div className="grid grid-cols-5 items-center h-16 max-w-md mx-auto px-1">
         {tabs.map((tab) => {

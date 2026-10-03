@@ -15,7 +15,8 @@ import {
   Upload,
   MoreVertical,
   X,
-  RotateCcw
+  RotateCcw,
+  Trash2
 } from 'lucide-react';
 import { PWAInstallButton } from './PWAInstallButton';
 
@@ -34,6 +35,7 @@ interface HeaderProps {
   onExportJSON?: () => void;
   onImportJSON?: (importedEvents: MasterODS[]) => void;
   onResetSampleData?: () => void;
+  onDeleteCurrentEvent?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -49,6 +51,7 @@ export const Header: React.FC<HeaderProps> = ({
   onExportJSON,
   onImportJSON,
   onResetSampleData,
+  onDeleteCurrentEvent,
 }) => {
   const currentEvent = events.find((e) => e.id === currentEventId) || events[0];
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -61,13 +64,16 @@ export const Header: React.FC<HeaderProps> = ({
     reader.onload = (event) => {
       try {
         const parsed = JSON.parse(event.target?.result as string);
-        if (Array.isArray(parsed)) {
-          onImportJSON(parsed);
-        } else if (parsed && parsed.scheda) {
-          onImportJSON([parsed]);
+        const list: MasterODS[] = Array.isArray(parsed) ? parsed : [parsed];
+        const valid = list.filter((ev) => ev && ev.scheda && ev.id);
+        if (valid.length === 0) {
+          window.alert('Il file selezionato non contiene Ordini di Servizio validi.');
+          return;
         }
+        onImportJSON(valid);
       } catch (err) {
         console.error('File ODS non valido', err);
+        window.alert('File non leggibile: assicurati di caricare un backup JSON esportato da ODS Catering.');
       }
     };
     reader.readAsText(file);
@@ -75,30 +81,30 @@ export const Header: React.FC<HeaderProps> = ({
     setMobileMenuOpen(false);
   };
 
-  const navItems: { id: ActiveTab; label: string; icon: React.ReactNode }[] = [
-    { id: 'in_servizio', label: 'In Servizio (Live)', icon: <Zap className="w-4 h-4 mr-1.5 text-amber-400" /> },
-    { id: 'capo_servizio', label: 'Capo Servizio', icon: <UserCheck className="w-4 h-4 mr-1.5" /> },
-    { id: 'brigata', label: 'Brigata (Fogli singoli)', icon: <Users className="w-4 h-4 mr-1.5" /> },
-    { id: 'carico', label: 'Carico & Facchinaggio', icon: <Truck className="w-4 h-4 mr-1.5" /> },
-    { id: 'modello_completo', label: 'Modello Completo', icon: <FileSpreadsheet className="w-4 h-4 mr-1.5" /> },
+  const navItems: { id: ActiveTab; label: string; shortLabel: string; icon: React.ReactNode }[] = [
+    { id: 'in_servizio', label: 'In Servizio (Live)', shortLabel: 'Live', icon: <Zap className="w-4 h-4 mr-1.5 text-amber-400" /> },
+    { id: 'capo_servizio', label: 'Capo Servizio', shortLabel: 'Capo Serv.', icon: <UserCheck className="w-4 h-4 mr-1.5" /> },
+    { id: 'brigata', label: 'Brigata (Fogli singoli)', shortLabel: 'Brigata', icon: <Users className="w-4 h-4 mr-1.5" /> },
+    { id: 'carico', label: 'Carico & Facchinaggio', shortLabel: 'Carico', icon: <Truck className="w-4 h-4 mr-1.5" /> },
+    { id: 'modello_completo', label: 'Modello Completo', shortLabel: 'Modello', icon: <FileSpreadsheet className="w-4 h-4 mr-1.5" /> },
   ];
 
   return (
     <header className="border-b border-slate-800 bg-[#090e17] text-slate-100 sticky top-0 z-30 no-print">
       {/* Primary Top Bar adhering to the Top Bar Contract */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-15 flex items-center justify-between gap-4">
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 h-15 flex items-center justify-between gap-4">
         {/* Zone 1: Single Text Element Wordmark */}
         <div className="flex items-center gap-2.5 shrink-0">
           <div className="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-sm shadow-inner">
             <span className="font-display tracking-widest text-xs">ODS</span>
           </div>
-          <span className="text-base sm:text-lg font-bold tracking-tight text-white font-display">
+          <span className="hidden sm:inline text-lg font-bold tracking-tight text-white font-display">
             Catering <span className="text-amber-400 font-medium">Master</span>
           </span>
         </div>
 
         {/* Zone 2: Navigation Links (Desktop 5 tabs) */}
-        <nav className="hidden lg:flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 shadow-inner">
+        <nav className="hidden xl:flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 shadow-inner">
           {navItems.map((item) => {
             const isActive = activeTab === item.id;
             return (
@@ -112,21 +118,22 @@ export const Header: React.FC<HeaderProps> = ({
                 }`}
               >
                 {item.icon}
-                <span>{item.label}</span>
+                <span className="hidden 2xl:inline">{item.label}</span>
+                <span className="2xl:hidden">{item.shortLabel}</span>
               </button>
             );
           })}
         </nav>
 
         {/* Zone 3: Primary Actions and Event Switcher */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
           {/* Event Picker */}
           <div className="flex items-center gap-1.5 bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs">
             <Calendar className="w-3.5 h-3.5 text-amber-400 shrink-0" />
             <select
               value={currentEventId}
               onChange={(e) => onSelectEvent(e.target.value)}
-              className="bg-transparent text-slate-100 font-medium text-xs focus:outline-none cursor-pointer max-w-[120px] sm:max-w-[170px] truncate"
+              className="bg-transparent text-slate-100 font-medium text-xs focus:outline-none cursor-pointer max-w-[90px] sm:max-w-[170px] truncate"
               aria-label="Seleziona evento ODS"
             >
               {events.map((ev) => (
@@ -159,7 +166,7 @@ export const Header: React.FC<HeaderProps> = ({
           )}
 
           {/* Install as iPhone / PWA WebApp Button */}
-          <PWAInstallButton />
+          <PWAInstallButton className="hidden md:flex" />
 
           {/* New Event Button */}
           <button
@@ -174,17 +181,17 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Print Button (Desktop) */}
           <button
             onClick={onPrintCurrentView}
-            className="hidden sm:flex items-center px-3.5 py-1.5 text-xs font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 rounded-lg transition-colors shadow-sm whitespace-nowrap cursor-pointer min-h-[36px]"
+            className="hidden sm:flex items-center px-2.5 2xl:px-3.5 py-1.5 text-xs font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 rounded-lg transition-colors shadow-sm whitespace-nowrap cursor-pointer min-h-[36px]"
             title="Stampa la scheda corrente in formato cartaceo o PDF"
           >
-            <Printer className="w-3.5 h-3.5 mr-1.5" />
-            <span>Stampa ODS</span>
+            <Printer className="w-3.5 h-3.5 2xl:mr-1.5" />
+            <span className="hidden 2xl:inline">Stampa ODS</span>
           </button>
 
           {/* Mobile More Options Button */}
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="md:hidden flex items-center justify-center p-2 text-slate-300 hover:text-white bg-slate-900 rounded-lg border border-slate-800 min-h-[44px] min-w-[40px] cursor-pointer"
+            className="flex items-center justify-center p-2 text-slate-300 hover:text-white bg-slate-900 rounded-lg border border-slate-800 min-h-[44px] min-w-[40px] cursor-pointer"
             aria-label="Altre opzioni evento"
           >
             <MoreVertical className="w-4 h-4" />
@@ -194,7 +201,7 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Secondary Context Strip (Zero-Pill clean typography) */}
       <div className="bg-[#0b0f19] border-t border-slate-800/80 px-4 sm:px-6 lg:px-8 py-2 text-[11px] sm:text-xs text-slate-400">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+        <div className="max-w-screen-2xl mx-auto flex flex-wrap items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
             <span className="font-mono text-amber-300 font-semibold tracking-tight">
               ODS n° {currentEvent.scheda.odsNumero}
@@ -340,6 +347,22 @@ export const Header: React.FC<HeaderProps> = ({
                   <div>
                     <div className="font-semibold">Ripristina Modelli ODS di Esempio</div>
                     <div className="text-[11px] text-slate-400">Ricarica i format completi preimpostati (Buffet & Placé)</div>
+                  </div>
+                </button>
+              )}
+
+              {onDeleteCurrentEvent && (
+                <button
+                  onClick={() => {
+                    onDeleteCurrentEvent();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 p-3 bg-slate-900/90 hover:bg-red-950/60 rounded-lg text-left font-medium min-h-[44px] border border-slate-800/80 cursor-pointer text-red-400"
+                >
+                  <Trash2 className="w-4 h-4 shrink-0" />
+                  <div>
+                    <div className="font-semibold">Elimina ODS Corrente</div>
+                    <div className="text-[11px] text-slate-400">Rimuove definitivamente ODS n° {currentEvent.scheda.odsNumero}</div>
                   </div>
                 </button>
               )}

@@ -48,7 +48,7 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
         title="Installa ODS Catering Master sulla Home del tuo iPhone o smartphone come WebApp"
       >
         <Smartphone className="w-3.5 h-3.5 text-amber-400" />
-        <span>Installa WebApp</span>
+        <span className={variant === 'header' ? 'hidden 2xl:inline' : ''}>Installa WebApp</span>
       </button>
 
       <PWAInstallModal
