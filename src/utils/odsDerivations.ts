@@ -1,4 +1,4 @@
-import { MasterODS, MembroBrigata, Postazione } from '../types/ods';
+import { MasterODS } from '../types/ods';
 
 export interface AuditResult {
   hasIssues: boolean;

@@ -6,13 +6,9 @@ import {
   CheckSquare, 
   Square, 
   Package, 
-  AlertTriangle, 
-  FileText, 
   Phone, 
   Check, 
   Plus, 
-  Filter,
-  CheckCircle2
 } from 'lucide-react';
 
 interface CaricoFacchinaggioViewProps {
@@ -22,7 +18,6 @@ interface CaricoFacchinaggioViewProps {
 
 export const CaricoFacchinaggioView: React.FC<CaricoFacchinaggioViewProps> = ({ ods, onUpdateODS }) => {
   const [toastMsg, setToastMsg] = useState<string | null>(null);
-  const [destFilter, setDestFilter] = useState<string>('tutti');
   const [showAddModal, setShowAddModal] = useState(false);
   const [nuovoContenitore, setNuovoContenitore] = useState({
     codice: `C${ods.contenitori.length + 1}`,
@@ -118,10 +113,6 @@ export const CaricoFacchinaggioView: React.FC<CaricoFacchinaggioViewProps> = ({ 
   const countCaricoRit = ods.contenitori.filter((c) => c.checkCaricoRitorno).length;
   const countScaricoBase = ods.contenitori.filter((c) => c.checkScaricoBase).length;
 
-  const filteredContenitori = ods.contenitori.filter((c) => {
-    if (destFilter === 'tutti') return true;
-    return c.destinazione.toLowerCase().includes(destFilter.toLowerCase());
-  });
 
   return (
     <div className="ods-paper rounded-xl p-6 sm:p-10 border border-slate-200/90 shadow-2xl max-w-5xl mx-auto my-4 sm:my-6 print:p-0 print:border-none print:shadow-none font-sans">
@@ -328,7 +319,7 @@ export const CaricoFacchinaggioView: React.FC<CaricoFacchinaggioViewProps> = ({ 
               </tr>
             </thead>
             <tbody>
-              {filteredContenitori.map((c) => (
+              {ods.contenitori.map((c) => (
                 <tr key={c.codice} className="border-t border-slate-300 hover:bg-slate-50/60">
                   <td className="p-2 border-r border-slate-300 font-mono font-bold text-center text-slate-900">{c.codice}</td>
                   <td className="p-2 border-r border-slate-300 font-medium text-slate-800">
@@ -402,7 +393,7 @@ export const CaricoFacchinaggioView: React.FC<CaricoFacchinaggioViewProps> = ({ 
 
         {/* Mobile Touch Cards View (One-handed Thumb friendly) */}
         <div className="md:hidden space-y-3">
-          {filteredContenitori.map((c) => (
+          {ods.contenitori.map((c) => (
             <div key={c.codice} className="bg-white p-3 rounded-xl border border-slate-300 shadow-xs space-y-2">
               <div className="flex items-start justify-between gap-2 border-b border-slate-100 pb-2">
                 <div>

@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { MasterODS } from './types/ods';
 import { sampleEvents } from './data/sampleEvents';
+import { createBlankODS } from './utils/odsFactory';
 import { Header, ActiveTab } from './components/Header';
 import { ConsistencyAuditBar } from './components/ConsistencyAuditBar';
 import { ModelloCompletoView } from './components/views/ModelloCompletoView';
@@ -26,10 +27,11 @@ export default function App() {
     } catch (e) {
       console.error('Error loading saved events', e);
     }
-    return sampleEvents;
+    // First launch: start from one blank ODS ready to be filled in
+    return [createBlankODS()];
   });
 
-  const [currentEventId, setCurrentEventId] = useState<string>(events[0]?.id || 'ods-2026-084');
+  const [currentEventId, setCurrentEventId] = useState<string>(events[0].id);
   const [activeTab, setActiveTab] = useState<ActiveTab>('capo_servizio');
   const [isNewEventModalOpen, setIsNewEventModalOpen] = useState(false);
   const [isRevisionModalOpen, setIsRevisionModalOpen] = useState(false);
@@ -106,11 +108,11 @@ export default function App() {
     setCurrentEventId(remaining[0].id);
   };
 
-  const handleResetSampleData = () => {
-    if (window.confirm('Vuoi ripristinare i modelli ODS di esempio originali (Buffet 200 pax e Placé Servito)?')) {
-      setEvents(sampleEvents);
-      setCurrentEventId(sampleEvents[0].id);
-    }
+  // Adds the sample ODS to the archive without touching the user's own ODS
+  const handleLoadSampleData = () => {
+    const sampleIds = new Set(sampleEvents.map((ev) => ev.id));
+    setEvents((prev) => [...sampleEvents, ...prev.filter((ev) => !sampleIds.has(ev.id))]);
+    setCurrentEventId(sampleEvents[0].id);
   };
 
   const handlePrint = () => {
@@ -133,7 +135,7 @@ export default function App() {
         onDuplicateCurrentEvent={handleDuplicateCurrentEvent}
         onExportJSON={handleExportJSON}
         onImportJSON={handleImportJSON}
-        onResetSampleData={handleResetSampleData}
+        onLoadSampleData={handleLoadSampleData}
         onDeleteCurrentEvent={handleDeleteCurrentEvent}
       />
 

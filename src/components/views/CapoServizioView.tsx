@@ -4,14 +4,8 @@ import {
   Phone, 
   CheckSquare, 
   Square, 
-  AlertCircle, 
   ShieldAlert, 
-  Clock, 
-  Sparkles, 
-  CheckCircle2, 
   Check, 
-  PlayCircle,
-  CheckCheck
 } from 'lucide-react';
 
 interface CapoServizioViewProps {

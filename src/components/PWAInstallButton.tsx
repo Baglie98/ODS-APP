@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 import { PWAInstallModal } from './PWAInstallModal';
-import { Smartphone, Download, Check } from 'lucide-react';
+import { Smartphone, Check } from 'lucide-react';
 
 interface PWAInstallButtonProps {
   className?: string;
@@ -12,7 +12,7 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
   className = '',
   variant = 'header' 
 }) => {
-  const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
+  const { isInstallable, isInstalled, install } = usePWAInstall();
   const [showModal, setShowModal] = useState(false);
 
   // If already running inside standalone PWA mode
@@ -54,7 +54,6 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
       <PWAInstallModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
-        isIOS={isIOS}
         onInstallChromium={install}
         isInstallableChromium={isInstallable}
       />
