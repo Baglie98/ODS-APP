@@ -32,6 +32,9 @@ interface ModelloCompletoViewProps {
 
 export const ModelloCompletoView: React.FC<ModelloCompletoViewProps> = ({ ods, onUpdateODS }) => {
   const [activeSection, setActiveSection] = useState<string>('scheda');
+  const [brigataSearch, setBrigataSearch] = useState<string>('');
+  const [materialeCategoriaFilter, setMaterialeCategoriaFilter] = useState<string>('Tutti');
+  const [materialeSearch, setMaterialeSearch] = useState<string>('');
 
   // Toggle optional module
   const toggleModulo = (modKey: keyof MasterODS['moduliAttivi']) => {
@@ -177,39 +180,58 @@ export const ModelloCompletoView: React.FC<ModelloCompletoViewProps> = ({ ods, o
   ];
 
   return (
-    <div className="max-w-7xl mx-auto my-6 px-4 sm:px-6">
-      {/* Official Top Title Card */}
-      <div className="bg-white text-slate-900 border border-slate-200 rounded-lg p-6 mb-6 shadow-sm">
-        <div className="flex flex-wrap justify-between items-start gap-4 border-b border-slate-200 pb-4">
+    <div className="max-w-7xl mx-auto my-4 sm:my-6 px-3 sm:px-6">
+      {/* Internal Navigation Tabs (Sticky Executive Segmented Bar) */}
+      <div className="flex overflow-x-auto gap-1 bg-[#0f172a] p-1.5 rounded-xl border border-slate-800 mb-6 scrollbar-none no-print sticky top-16 z-20 shadow-lg backdrop-blur-md">
+        {navSections.map((sec) => (
+          <button
+            key={sec.id}
+            onClick={() => setActiveSection(sec.id)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg whitespace-nowrap transition-all cursor-pointer ${
+              activeSection === sec.id
+                ? 'bg-slate-800 text-amber-300 font-bold border border-slate-700 shadow-sm'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/40'
+            }`}
+          >
+            {sec.icon}
+            <span>{sec.label}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Official Master ODS Document Sheet */}
+      <div className="ods-paper rounded-xl p-6 sm:p-10 border border-slate-200/90 shadow-2xl space-y-6">
+        {/* Document Header */}
+        <div className="flex flex-wrap justify-between items-start gap-4 border-b-2 border-slate-900 pb-5">
           <div>
-            <span className="text-xs uppercase tracking-widest text-slate-500 font-bold block mb-1">
+            <span className="text-[11px] uppercase tracking-widest text-slate-500 font-bold block mb-1">
               ORDINE DI SERVIZIO MASTER · FONTE UNICA GENERATRICE
             </span>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-950 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight font-display">
               Modello Completo (1–10 + Moduli)
             </h1>
-            <p className="text-xs text-slate-600 mt-1 max-w-2xl">
+            <p className="text-xs text-slate-600 mt-1 max-w-2xl leading-relaxed">
               Catering ed eventi · Adattabile a ogni formato · Da questo modello derivano automaticamente i 4 ODS di lettura per Capo Servizio, Brigata, Carico e In Servizio.
             </p>
           </div>
 
-          <div className="font-mono text-xs text-slate-800 bg-slate-50 border border-slate-300 p-3 rounded text-right space-y-1">
-            <div><strong>ODS n°:</strong> <span className="text-emerald-700 font-bold">{ods.scheda.odsNumero}</span></div>
+          <div className="font-mono text-xs text-slate-800 bg-slate-50 border border-slate-300 p-3 rounded-lg text-right space-y-1">
+            <div><strong>ODS n°:</strong> <span className="text-slate-950 font-bold">{ods.scheda.odsNumero}</span></div>
             <div><strong>{ods.scheda.revisioneCorrente}</strong> del {ods.scheda.dataRevisione}</div>
             <div className="text-[11px] text-slate-500">Redatto da: {ods.scheda.redattoDa}</div>
           </div>
         </div>
 
         {/* Moduli Attivi Toggle Bar */}
-        <div className="mt-4 pt-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-700 block mb-2">
+        <div className="pt-1">
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-700 block mb-2.5">
             Moduli attivi per questo evento (M1 – M6):
           </span>
           <div className="flex flex-wrap gap-2 text-xs">
             {[
               { key: 'm1Guardaroba', label: 'M1 Guardaroba e accoglienza' },
-              { key: 'm2Bambini', label: 'M2 Punto bambini / postazioni speciali' },
-              { key: 'm3ProgrammaChef', label: 'M3 Programma con chef o lezione' },
+              { key: 'm2Bambini', label: 'M2 Punto bambini / speciali' },
+              { key: 'm3ProgrammaChef', label: 'M3 Programma con chef / lezione' },
               { key: 'm4TrasportoFurgone', label: 'M4 Trasporto esterno e furgone' },
               { key: 'm5CucinaRimpiazzi', label: 'M5 Cucina e rimpiazzi' },
               { key: 'm6DoppioTurno', label: 'M6 Doppio turno' },
@@ -219,41 +241,21 @@ export const ModelloCompletoView: React.FC<ModelloCompletoViewProps> = ({ ods, o
                 <button
                   key={key}
                   onClick={() => toggleModulo(key as keyof MasterODS['moduliAttivi'])}
-                  className={`px-3 py-1.5 rounded text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2 transition-all cursor-pointer border ${
                     active
-                      ? 'bg-emerald-50 text-emerald-900 border-emerald-400 font-bold'
-                      : 'bg-slate-100 text-slate-500 border-slate-300 hover:bg-slate-200'
+                      ? 'bg-slate-900 text-amber-300 border-slate-900 font-semibold shadow-sm'
+                      : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200/80 hover:text-slate-900'
                   }`}
                 >
-                  <span className={`w-2 h-2 rounded-full ${active ? 'bg-emerald-600' : 'bg-slate-400'}`} />
+                  <span className={`w-2 h-2 rounded-full ${active ? 'bg-amber-400' : 'bg-slate-400'}`} />
                   <span>{label}</span>
                 </button>
               );
             })}
           </div>
         </div>
-      </div>
 
-      {/* Internal Navigation Tabs */}
-      <div className="flex overflow-x-auto gap-1 bg-neutral-900 p-1 rounded-lg border border-neutral-800 mb-6 scrollbar-none no-print">
-        {navSections.map((sec) => (
-          <button
-            key={sec.id}
-            onClick={() => setActiveSection(sec.id)}
-            className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded whitespace-nowrap transition-colors ${
-              activeSection === sec.id
-                ? 'bg-neutral-800 text-emerald-400 font-bold border border-neutral-700'
-                : 'text-neutral-400 hover:text-white hover:bg-neutral-800/50'
-            }`}
-          >
-            {sec.icon}
-            <span>{sec.label}</span>
-          </button>
-        ))}
-      </div>
-
-      {/* SECTION CONTENT CONTAINER */}
-      <div className="bg-white text-slate-900 border border-slate-200 rounded-lg p-6 sm:p-8 shadow-sm">
+        <div className="border-t border-slate-200/80 pt-6">
         {/* 1. Scheda Evento */}
         {activeSection === 'scheda' && (
           <div className="space-y-6">
@@ -675,22 +677,31 @@ export const ModelloCompletoView: React.FC<ModelloCompletoViewProps> = ({ ods, o
         {/* 4. Brigata (Anagrafica Unica) */}
         {activeSection === 'brigata' && (
           <div className="space-y-4">
-            <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+            <div className="flex flex-wrap justify-between items-center gap-3 border-b border-slate-200 pb-3">
               <div>
                 <h2 className="text-lg font-bold text-slate-950">4. Brigata (Anagrafica Unica)</h2>
                 <p className="text-xs text-slate-500">Ogni persona compare una volta sola qui. Le altre sezioni rimandano con i codici.</p>
               </div>
-              <button
-                onClick={addBrigataMember}
-                className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 bg-emerald-600 text-white rounded hover:bg-emerald-500"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span>Aggiungi Addetto</span>
-              </button>
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  placeholder="Cerca per nome..."
+                  value={brigataSearch}
+                  onChange={(e) => setBrigataSearch(e.target.value)}
+                  className="px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs w-44 focus:ring-1 focus:ring-emerald-500 bg-white"
+                />
+                <button
+                  onClick={addBrigataMember}
+                  className="flex items-center gap-1 text-xs font-semibold px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg shadow-xs cursor-pointer"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Aggiungi Addetto</span>
+                </button>
+              </div>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-xs text-left border-collapse border border-slate-300">
+            <div className="overflow-x-auto border border-slate-300 rounded-lg shadow-2xs">
+              <table className="w-full text-xs text-left border-collapse">
                 <thead>
                   <tr className="bg-slate-100 text-slate-800 font-semibold border-b border-slate-300">
                     <th className="p-2 border-r border-slate-300 w-10 text-center">N</th>
@@ -698,28 +709,34 @@ export const ModelloCompletoView: React.FC<ModelloCompletoViewProps> = ({ ods, o
                     <th className="p-2 border-r border-slate-300 w-36">Ruolo</th>
                     <th className="p-2 border-r border-slate-300 w-36">Turno</th>
                     <th className="p-2 border-r border-slate-300 w-16 text-center">Ore</th>
-                    <th className="p-2 border-r border-slate-300 w-20 text-center">Stato</th>
+                    <th className="p-2 border-r border-slate-300 w-24 text-center">Stato</th>
                     <th className="p-2 border-r border-slate-300 w-36">Cellulare</th>
                     <th className="p-2 w-10 text-center">Azioni</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200">
-                  {ods.brigata.map((m, idx) => (
-                    <tr key={m.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}>
-                      <td className="p-2 border-r border-slate-300 font-mono font-bold text-center text-slate-600">{idx + 1}</td>
+                  {ods.brigata
+                    .filter((m) =>
+                      !brigataSearch ||
+                      m.cognomeNome.toLowerCase().includes(brigataSearch.toLowerCase()) ||
+                      (m.ruoloDettaglio && m.ruoloDettaglio.toLowerCase().includes(brigataSearch.toLowerCase()))
+                    )
+                    .map((m, idx) => (
+                    <tr key={m.id} className={idx % 2 === 0 ? 'bg-white hover:bg-slate-50/80' : 'bg-slate-50/50 hover:bg-slate-50/80'}>
+                      <td className="p-2 border-r border-slate-300 font-mono font-bold text-center text-slate-600">{m.n}</td>
                       <td className="p-1 border-r border-slate-300">
                         <input
                           type="text"
                           value={m.cognomeNome}
                           onChange={(e) => updateBrigataMember(m.id, 'cognomeNome', e.target.value)}
-                          className="w-full px-1.5 py-1 border border-slate-200 rounded font-semibold text-slate-900"
+                          className="w-full px-2 py-1 border border-slate-200 rounded font-semibold text-slate-900 focus:bg-white"
                         />
                       </td>
                       <td className="p-1 border-r border-slate-300">
                         <select
                           value={m.ruolo}
                           onChange={(e) => updateBrigataMember(m.id, 'ruolo', e.target.value)}
-                          className="w-full px-1.5 py-1 border border-slate-200 rounded text-xs bg-white"
+                          className="w-full px-1.5 py-1 border border-slate-200 rounded text-xs bg-white cursor-pointer font-medium"
                         >
                           <option value="capo_servizio">Capo Servizio</option>
                           <option value="responsabile">Responsabile</option>
@@ -740,14 +757,14 @@ export const ModelloCompletoView: React.FC<ModelloCompletoViewProps> = ({ ods, o
                           step="0.5"
                           value={m.oreTotali}
                           onChange={(e) => updateBrigataMember(m.id, 'oreTotali', parseFloat(e.target.value) || 0)}
-                          className="w-14 px-1 py-1 border border-slate-200 rounded font-mono text-center"
+                          className="w-14 px-1 py-1 border border-slate-200 rounded font-mono text-center font-bold"
                         />
                       </td>
                       <td className="p-1 border-r border-slate-300 text-center">
                         <select
                           value={m.stato}
                           onChange={(e) => updateBrigataMember(m.id, 'stato', e.target.value)}
-                          className={`px-1.5 py-1 border rounded font-mono font-bold text-xs ${
+                          className={`px-2 py-1 border rounded font-mono font-bold text-xs cursor-pointer ${
                             m.stato === 'C' ? 'bg-emerald-50 text-emerald-800 border-emerald-300' : 'bg-amber-50 text-amber-800 border-amber-300'
                           }`}
                         >
@@ -766,7 +783,7 @@ export const ModelloCompletoView: React.FC<ModelloCompletoViewProps> = ({ ods, o
                       <td className="p-1 text-center">
                         <button
                           onClick={() => removeBrigataMember(m.id)}
-                          className="text-slate-400 hover:text-rose-600 p-1 rounded"
+                          className="text-slate-400 hover:text-rose-600 p-1 rounded transition-colors"
                           title="Elimina addetto"
                         >
                           <Trash2 className="w-3.5 h-3.5 inline" />
@@ -1418,6 +1435,7 @@ export const ModelloCompletoView: React.FC<ModelloCompletoViewProps> = ({ ods, o
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 };

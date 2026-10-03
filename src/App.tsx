@@ -88,7 +88,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#0b0f19] text-slate-100 flex flex-col font-sans selection:bg-amber-500/20 selection:text-amber-200">
       {/* 3-Zone Top Navigation Contract */}
       <Header
         events={events}
@@ -108,7 +108,7 @@ export default function App() {
       {currentEvent && <ConsistencyAuditBar ods={currentEvent} />}
 
       {/* Main Viewport Content */}
-      <main className="flex-1 w-full pb-24 lg:pb-12">
+      <main className="flex-1 w-full pb-24 lg:pb-12 pt-2">
         {currentEvent ? (
           <>
             {activeTab === 'modello_completo' && (
@@ -128,8 +128,8 @@ export default function App() {
             )}
           </>
         ) : (
-          <div className="text-center py-20 text-neutral-400">
-            Nessun evento selezionato. Crea un nuovo ODS per iniziare.
+          <div className="text-center py-24 text-slate-500 font-medium text-sm">
+            Nessun evento selezionato. Crea un nuovo Ordine di Servizio per iniziare.
           </div>
         )}
       </main>

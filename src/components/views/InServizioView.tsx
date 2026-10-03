@@ -61,70 +61,70 @@ export const InServizioView: React.FC<InServizioViewProps> = ({ ods, onUpdateODS
   const responsabileCarico = ods.contatti.find((c) => c.ruolo.toLowerCase().includes('carico') || c.ruolo.toLowerCase().includes('logistica'));
 
   return (
-    <div className="bg-white text-slate-900 shadow-sm border border-slate-200 rounded-lg p-5 sm:p-7 max-w-4xl mx-auto my-6 print:p-0 print:border-none print:shadow-none font-sans">
+    <div className="ods-paper rounded-xl p-5 sm:p-8 max-w-4xl mx-auto my-4 sm:my-6 print:p-0 print:border-none print:shadow-none font-sans">
       {/* Official Compact Header */}
-      <div className="border-b-2 border-slate-900 pb-3 mb-4">
-        <div className="flex justify-between items-start">
+      <div className="border-b-2 border-slate-900 pb-3 mb-5">
+        <div className="flex justify-between items-start gap-4">
           <div>
-            <span className="text-[11px] uppercase tracking-widest text-slate-500 font-bold block">
+            <span className="text-[11px] uppercase tracking-widest text-slate-500 font-bold block mb-0.5">
               ORDINE DI SERVIZIO DERIVATO · FOGLIO RAPIDO DA PORTARE CON SÉ
             </span>
-            <h1 className="text-2xl font-black text-slate-950 tracking-tight flex items-center gap-2">
-              <Zap className="w-6 h-6 text-amber-500 no-print" />
-              ODS In Servizio
+            <h1 className="text-2xl font-bold text-slate-950 tracking-tight flex items-center gap-2 font-display">
+              <Zap className="w-5 h-5 text-amber-500 no-print" />
+              ODS In Servizio (Live)
             </h1>
           </div>
-          <div className="text-right font-mono text-xs text-slate-700 bg-slate-100 px-2.5 py-1.5 rounded border border-slate-300">
+          <div className="text-right font-mono text-xs text-slate-700 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-300">
             <div>ODS n° {ods.scheda.odsNumero} · {ods.scheda.revisioneCorrente}</div>
-            <div className="font-semibold">{ods.scheda.data}</div>
+            <div className="font-semibold text-slate-950">{ods.scheda.data}</div>
           </div>
         </div>
       </div>
 
       {/* Event Details Ribbon */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs bg-slate-100 p-2.5 rounded border border-slate-300 mb-4 font-mono">
-        <div><span className="font-sans text-slate-500">Evento:</span> <strong className="text-slate-900 font-sans block truncate">{ods.scheda.eventoNomeTipo}</strong></div>
-        <div><span className="font-sans text-slate-500">Luogo:</span> <span className="text-slate-800 font-sans block truncate">{ods.scheda.luogoIndirizzo}</span></div>
-        <div><span className="font-sans text-slate-500">Orario servizio:</span> <strong className="text-slate-900 block">{ods.scheda.inizioEvento} - {ods.scheda.fineEvento}</strong></div>
-        <div><span className="font-sans text-slate-500">Pax previsti:</span> <strong className="text-slate-900 block">{ods.scheda.ospitiAdulti + ods.scheda.ospitiBambiniSpeciali}</strong></div>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs bg-slate-50 p-3 rounded-lg border border-slate-200 mb-5 font-mono">
+        <div><span className="font-sans text-slate-500 block text-[11px]">Evento:</span> <strong className="text-slate-950 font-sans block truncate">{ods.scheda.eventoNomeTipo}</strong></div>
+        <div><span className="font-sans text-slate-500 block text-[11px]">Luogo:</span> <span className="text-slate-800 font-sans block truncate">{ods.scheda.luogoIndirizzo}</span></div>
+        <div><span className="font-sans text-slate-500 block text-[11px]">Orario servizio:</span> <strong className="text-slate-950 block">{ods.scheda.inizioEvento} - {ods.scheda.fineEvento}</strong></div>
+        <div><span className="font-sans text-slate-500 block text-[11px]">Pax previsti:</span> <strong className="text-slate-950 block">{ods.scheda.ospitiAdulti + ods.scheda.ospitiBambiniSpeciali}</strong></div>
       </div>
 
       {/* ALLERGIE E DIETE — BANNER ROSSO CRITICO */}
-      <section className="mb-5 bg-rose-50 border-2 border-rose-600 rounded-lg overflow-hidden shadow-sm">
-        <div className="bg-rose-700 text-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider flex items-center justify-between">
-          <span className="flex items-center gap-1.5">
-            <ShieldAlert className="w-4 h-4 text-rose-200" />
+      <section className="mb-5 bg-rose-50/80 border-2 border-rose-600 rounded-xl overflow-hidden shadow-sm">
+        <div className="bg-rose-700 text-white px-3.5 py-2 text-xs font-bold uppercase tracking-wider flex items-center justify-between gap-2">
+          <span className="flex items-center gap-2">
+            <ShieldAlert className="w-4 h-4 text-rose-200 shrink-0" />
             ALLERGIE E DIETE SPECIALI — LEGGERE PRIMA DI APRIRE IL SERVIZIO
           </span>
-          <span className="text-[11px] font-normal lowercase tracking-normal text-rose-100">
-            in caso di dubbio NON rispondere mai a memoria: chiama il capo servizio o la cucina
+          <span className="text-[11px] font-normal lowercase tracking-normal text-rose-100 hidden sm:inline">
+            in caso di dubbio NON rispondere a memoria: chiama il capo servizio o la cucina
           </span>
         </div>
 
-        <div className="overflow-x-auto p-2">
+        <div className="overflow-x-auto p-3">
           {ods.allergeni.length === 0 ? (
             <p className="text-xs text-rose-800 p-2 italic text-center">Nessuna allergia o dieta speciale segnalata dal committente.</p>
           ) : (
             <table className="w-full text-xs text-left border-collapse">
               <thead>
                 <tr className="border-b border-rose-300 text-rose-950 font-bold">
-                  <th className="p-1.5">Ospite o gruppo</th>
-                  <th className="p-1.5">Allergene / Dieta</th>
-                  <th className="p-1.5">Gestione e Piatto Sicuro</th>
-                  <th className="p-1.5 w-32">Chi gestisce</th>
+                  <th className="p-2">Ospite o gruppo</th>
+                  <th className="p-2">Allergene / Dieta</th>
+                  <th className="p-2">Gestione e Piatto Sicuro</th>
+                  <th className="p-2 w-32">Chi gestisce</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-rose-200">
+              <tbody className="divide-y divide-rose-200/80">
                 {ods.allergeni.map((al) => (
                   <tr key={al.id} className="text-rose-950">
-                    <td className="p-1.5 font-bold">{al.ospiteGruppo}</td>
-                    <td className="p-1.5">
-                      <span className="bg-rose-200 text-rose-900 font-bold px-1.5 py-0.5 rounded text-[11px]">
+                    <td className="p-2 font-bold">{al.ospiteGruppo}</td>
+                    <td className="p-2">
+                      <span className="bg-rose-100 text-rose-950 font-bold px-2 py-0.5 rounded text-[11px] border border-rose-300">
                         {al.allergeneDieta}
                       </span>
                     </td>
-                    <td className="p-1.5 font-medium">{al.gestione}</td>
-                    <td className="p-1.5 font-bold text-rose-900">{al.respInSala}</td>
+                    <td className="p-2 font-medium">{al.gestione}</td>
+                    <td className="p-2 font-bold text-rose-900">{al.respInSala}</td>
                   </tr>
                 ))}
               </tbody>
@@ -275,10 +275,10 @@ export const InServizioView: React.FC<InServizioViewProps> = ({ ods, onUpdateODS
                   {resp?.cellulare ? (
                     <a
                       href={`tel:${resp.cellulare}`}
-                      className="px-2.5 py-1.5 bg-emerald-50 text-emerald-800 border border-emerald-300 rounded-lg text-xs font-bold flex items-center gap-1 shrink-0 min-h-[44px]"
+                      className="px-3 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 min-h-[44px] hover:bg-slate-800 transition-colors"
                       title="Chiama responsabile"
                     >
-                      <Phone className="w-3.5 h-3.5 text-emerald-700" />
+                      <Phone className="w-3.5 h-3.5 text-amber-400" />
                       <span>Chiama</span>
                     </a>
                   ) : (
@@ -292,55 +292,55 @@ export const InServizioView: React.FC<InServizioViewProps> = ({ ods, onUpdateODS
       </div>
 
       {/* Numeri Utili Veloci (Griglia Click to Call) */}
-      <section className="mb-5 border border-slate-300 rounded p-3 bg-slate-50">
-        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800 mb-2">
-          Numeri Utili Rapidi (Chiamata Diretta)
+      <section className="mb-5 border border-slate-300 rounded-lg p-3.5 bg-slate-50">
+        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-2.5">
+          Numeri Utili Rapidi (Chiamata Diretta Un Clic)
         </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
-          <div className="p-2 bg-white rounded border border-slate-200">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
+          <div className="p-2.5 bg-white rounded-lg border border-slate-200 shadow-2xs">
             <span className="text-[10px] text-slate-500 uppercase block font-semibold">Capo Servizio</span>
-            <div className="font-bold text-slate-900">{capoServizio?.nome || ods.scheda.redattoDa}</div>
-            <a href={`tel:${capoServizio?.telefono}`} className="text-emerald-700 font-mono font-bold text-xs flex items-center hover:underline">
-              <Phone className="w-3 h-3 mr-1" /> {capoServizio?.telefono || '-'}
+            <div className="font-bold text-slate-950 text-xs">{capoServizio?.nome || ods.scheda.redattoDa}</div>
+            <a href={`tel:${capoServizio?.telefono}`} className="text-slate-900 font-mono font-bold text-xs flex items-center mt-1 hover:underline">
+              <Phone className="w-3 h-3 mr-1 text-slate-500" /> {capoServizio?.telefono || '-'}
             </a>
           </div>
 
-          <div className="p-2 bg-white rounded border border-slate-200">
+          <div className="p-2.5 bg-white rounded-lg border border-slate-200 shadow-2xs">
             <span className="text-[10px] text-slate-500 uppercase block font-semibold">Referente in Loco</span>
-            <div className="font-bold text-slate-900">{referenteLocation?.nome || 'N/D'}</div>
-            <a href={`tel:${referenteLocation?.telefono}`} className="text-emerald-700 font-mono font-bold text-xs flex items-center hover:underline">
-              <Phone className="w-3 h-3 mr-1" /> {referenteLocation?.telefono || '-'}
+            <div className="font-bold text-slate-950 text-xs">{referenteLocation?.nome || 'N/D'}</div>
+            <a href={`tel:${referenteLocation?.telefono}`} className="text-slate-900 font-mono font-bold text-xs flex items-center mt-1 hover:underline">
+              <Phone className="w-3 h-3 mr-1 text-slate-500" /> {referenteLocation?.telefono || '-'}
             </a>
           </div>
 
-          <div className="p-2 bg-white rounded border border-slate-200">
+          <div className="p-2.5 bg-white rounded-lg border border-slate-200 shadow-2xs">
             <span className="text-[10px] text-slate-500 uppercase block font-semibold">Committente</span>
-            <div className="font-bold text-slate-900 truncate">{committente?.nome || 'Cliente'}</div>
-            <a href={`tel:${committente?.telefono}`} className="text-emerald-700 font-mono font-bold text-xs flex items-center hover:underline">
-              <Phone className="w-3 h-3 mr-1" /> {committente?.telefono || '-'}
+            <div className="font-bold text-slate-950 text-xs truncate">{committente?.nome || 'Cliente'}</div>
+            <a href={`tel:${committente?.telefono}`} className="text-slate-900 font-mono font-bold text-xs flex items-center mt-1 hover:underline">
+              <Phone className="w-3 h-3 mr-1 text-slate-500" /> {committente?.telefono || '-'}
             </a>
           </div>
 
-          <div className="p-2 bg-white rounded border border-slate-200">
+          <div className="p-2.5 bg-white rounded-lg border border-slate-200 shadow-2xs">
             <span className="text-[10px] text-slate-500 uppercase block font-semibold">Cucina / Chef</span>
-            <div className="font-bold text-slate-900">{chefCucina?.nome || 'Chef Spada'}</div>
-            <a href={`tel:${chefCucina?.telefono}`} className="text-emerald-700 font-mono font-bold text-xs flex items-center hover:underline">
-              <Phone className="w-3 h-3 mr-1" /> {chefCucina?.telefono || '-'}
+            <div className="font-bold text-slate-950 text-xs">{chefCucina?.nome || 'Chef Spada'}</div>
+            <a href={`tel:${chefCucina?.telefono}`} className="text-slate-900 font-mono font-bold text-xs flex items-center mt-1 hover:underline">
+              <Phone className="w-3 h-3 mr-1 text-slate-500" /> {chefCucina?.telefono || '-'}
             </a>
           </div>
 
-          <div className="p-2 bg-white rounded border border-slate-200">
+          <div className="p-2.5 bg-white rounded-lg border border-slate-200 shadow-2xs">
             <span className="text-[10px] text-slate-500 uppercase block font-semibold">Carico / Furgone</span>
-            <div className="font-bold text-slate-900">{responsabileCarico?.nome || 'R. Neri'}</div>
-            <a href={`tel:${responsabileCarico?.telefono}`} className="text-emerald-700 font-mono font-bold text-xs flex items-center hover:underline">
-              <Phone className="w-3 h-3 mr-1" /> {responsabileCarico?.telefono || '-'}
+            <div className="font-bold text-slate-950 text-xs">{responsabileCarico?.nome || 'R. Neri'}</div>
+            <a href={`tel:${responsabileCarico?.telefono}`} className="text-slate-900 font-mono font-bold text-xs flex items-center mt-1 hover:underline">
+              <Phone className="w-3 h-3 mr-1 text-slate-500" /> {responsabileCarico?.telefono || '-'}
             </a>
           </div>
 
-          <div className="p-2 bg-rose-50 rounded border border-rose-300">
+          <div className="p-2.5 bg-rose-50 rounded-lg border border-rose-300 shadow-2xs">
             <span className="text-[10px] text-rose-700 uppercase block font-bold">Emergenza Sanitaria</span>
-            <div className="font-bold text-rose-950">NUE Emergenze</div>
-            <a href="tel:112" className="text-rose-800 font-mono font-black text-sm flex items-center hover:underline">
+            <div className="font-bold text-rose-950 text-xs">NUE Emergenze</div>
+            <a href="tel:112" className="text-rose-900 font-mono font-black text-sm flex items-center hover:underline mt-0.5">
               <Phone className="w-3.5 h-3.5 mr-1" /> 112 (Subito)
             </a>
           </div>
@@ -348,22 +348,22 @@ export const InServizioView: React.FC<InServizioViewProps> = ({ ods, onUpdateODS
       </section>
 
       {/* Registro Imprevisti Live */}
-      <section className="mb-5 border border-slate-300 rounded p-3 bg-slate-50/50">
-        <div className="flex justify-between items-center mb-2">
-          <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-900 text-white px-2.5 py-1 rounded">
+      <section className="mb-5 border border-slate-300 rounded-lg p-3.5 bg-slate-50/50">
+        <div className="flex justify-between items-center mb-2.5">
+          <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-900 text-white px-2.5 py-1.5 rounded-lg">
             Registro Live Imprevisti in Servizio
           </h2>
           <button
             onClick={() => setMostraFormImprevisto(!mostraFormImprevisto)}
-            className="flex items-center gap-1 text-xs font-semibold px-2 py-1 bg-neutral-900 text-white rounded hover:bg-neutral-800 transition-colors no-print cursor-pointer"
+            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors no-print cursor-pointer"
           >
-            <Plus className="w-3.5 h-3.5 text-emerald-400" />
+            <Plus className="w-3.5 h-3.5 text-amber-400" />
             <span>Registra Imprevisto</span>
           </button>
         </div>
 
         {mostraFormImprevisto && (
-          <form onSubmit={addImprevisto} className="mb-3 p-3 bg-white border border-slate-300 rounded text-xs space-y-2 no-print">
+          <form onSubmit={addImprevisto} className="mb-3 p-3 bg-white border border-slate-300 rounded-lg text-xs space-y-2 no-print shadow-xs">
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
               <div>
                 <label className="text-[11px] text-slate-500 font-bold block">Ora:</label>
@@ -371,7 +371,7 @@ export const InServizioView: React.FC<InServizioViewProps> = ({ ods, onUpdateODS
                   type="text"
                   value={nuovoImprevisto.ora}
                   onChange={(e) => setNuovoImprevisto({ ...nuovoImprevisto, ora: e.target.value })}
-                  className="w-full px-2 py-1 border border-slate-300 rounded font-mono"
+                  className="w-full px-2 py-1.5 border border-slate-300 rounded font-mono"
                   required
                 />
               </div>
@@ -382,7 +382,7 @@ export const InServizioView: React.FC<InServizioViewProps> = ({ ods, onUpdateODS
                   placeholder="es. Bottiglia rotta vicino buvette / calo tensione..."
                   value={nuovoImprevisto.situazione}
                   onChange={(e) => setNuovoImprevisto({ ...nuovoImprevisto, situazione: e.target.value })}
-                  className="w-full px-2 py-1 border border-slate-300 rounded"
+                  className="w-full px-2 py-1.5 border border-slate-300 rounded"
                   required
                 />
               </div>
@@ -395,7 +395,7 @@ export const InServizioView: React.FC<InServizioViewProps> = ({ ods, onUpdateODS
                   placeholder="es. Matteo Valli + addetto P6"
                   value={nuovoImprevisto.chiAvvisareOGestisce}
                   onChange={(e) => setNuovoImprevisto({ ...nuovoImprevisto, chiAvvisareOGestisce: e.target.value })}
-                  className="w-full px-2 py-1 border border-slate-300 rounded"
+                  className="w-full px-2 py-1.5 border border-slate-300 rounded"
                 />
               </div>
               <div>
@@ -405,7 +405,7 @@ export const InServizioView: React.FC<InServizioViewProps> = ({ ods, onUpdateODS
                   placeholder="es. Pavimento asciugato, nessun ferito"
                   value={nuovoImprevisto.esito}
                   onChange={(e) => setNuovoImprevisto({ ...nuovoImprevisto, esito: e.target.value })}
-                  className="w-full px-2 py-1 border border-slate-300 rounded"
+                  className="w-full px-2 py-1.5 border border-slate-300 rounded"
                 />
               </div>
             </div>
@@ -413,13 +413,13 @@ export const InServizioView: React.FC<InServizioViewProps> = ({ ods, onUpdateODS
               <button
                 type="button"
                 onClick={() => setMostraFormImprevisto(false)}
-                className="px-2.5 py-1 text-slate-600 hover:text-slate-900"
+                className="px-3 py-1.5 text-slate-600 hover:text-slate-900"
               >
                 Annulla
               </button>
               <button
                 type="submit"
-                className="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded"
+                className="px-4 py-1.5 bg-slate-900 text-white font-bold rounded-lg hover:bg-slate-800 transition-colors"
               >
                 Salva Imprevisto
               </button>
@@ -460,39 +460,39 @@ export const InServizioView: React.FC<InServizioViewProps> = ({ ods, onUpdateODS
       </section>
 
       {/* Chiusura Rapida */}
-      <section className="border-t-2 border-slate-900 pt-3">
-        <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-900 text-white px-2.5 py-1 mb-2 rounded">
+      <section className="border-t-2 border-slate-900 pt-4">
+        <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-900 text-white px-3 py-2 mb-3 rounded-lg">
           Chiusura Rapida & Checklist Fine Servizio
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-          <div className="space-y-1.5 text-slate-800">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+          <div className="space-y-2 text-slate-800">
             <div className="flex items-center gap-2">
               <span className="font-bold text-slate-700">Pax effettivi:</span>
-              <span className="font-mono bg-slate-100 px-2 py-0.5 rounded border border-slate-300">
+              <span className="font-mono bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-300">
                 Adulti: <strong>{ods.chiusura.paxRealiAdulti || ods.scheda.ospitiAdulti}</strong> · Bambini: <strong>{ods.chiusura.paxRealiBambini || ods.scheda.ospitiBambiniSpeciali}</strong>
               </span>
             </div>
-            <div className="flex items-center gap-2">
-              <CheckSquare className="w-4 h-4 text-emerald-600" />
+            <div className="flex items-center gap-2.5">
+              <CheckSquare className="w-4 h-4 text-slate-900 shrink-0" />
               <span>Sbarazzo e pulizia completati, rifiuti differenziati raccolti</span>
             </div>
-            <div className="flex items-center gap-2">
-              <CheckSquare className="w-4 h-4 text-emerald-600" />
+            <div className="flex items-center gap-2.5">
+              <CheckSquare className="w-4 h-4 text-slate-900 shrink-0" />
               <span>Materiale contato per contenitore C1..C8 e postazione P1..P10</span>
             </div>
           </div>
 
-          <div className="space-y-1.5 text-slate-800">
-            <div className="flex items-center gap-2">
-              <CheckSquare className="w-4 h-4 text-emerald-600" />
+          <div className="space-y-2 text-slate-800">
+            <div className="flex items-center gap-2.5">
+              <CheckSquare className="w-4 h-4 text-slate-900 shrink-0" />
               <span>Rotture e mancanze annotate con quantità sul modello completo</span>
             </div>
-            <div className="flex items-center gap-2">
-              <CheckSquare className="w-4 h-4 text-emerald-600" />
+            <div className="flex items-center gap-2.5">
+              <CheckSquare className="w-4 h-4 text-slate-900 shrink-0" />
               <span>Via libera del Capo Servizio alla brigata prima dello scioglimento</span>
             </div>
-            <div className="flex items-center gap-2">
-              <CheckSquare className="w-4 h-4 text-emerald-600" />
+            <div className="flex items-center gap-2.5">
+              <CheckSquare className="w-4 h-4 text-slate-900 shrink-0" />
               <span>Carico di ritorno ultimato con firma di consegna sul mezzo</span>
             </div>
           </div>

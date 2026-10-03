@@ -54,73 +54,73 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
   const controlliBriefing = ods.controlliCapoServizio.filter((c) => c.tipo === 'briefing');
 
   return (
-    <div className="bg-white text-slate-900 shadow-sm border border-slate-200 rounded-lg p-6 sm:p-8 max-w-5xl mx-auto my-6 print:p-0 print:border-none print:shadow-none">
+    <div className="ods-paper rounded-xl p-6 sm:p-10 border border-slate-200/90 shadow-2xl max-w-5xl mx-auto my-4 sm:my-6 print:p-0 print:border-none print:shadow-none font-sans">
       {/* Official Header */}
       <div className="border-b-2 border-slate-900 pb-4 mb-6">
-        <div className="flex justify-between items-start">
+        <div className="flex justify-between items-start gap-4">
           <div>
-            <span className="text-xs uppercase tracking-widest text-slate-500 font-bold block mb-1">
+            <span className="text-[11px] uppercase tracking-widest text-slate-500 font-bold block mb-1">
               ORDINE DI SERVIZIO DERIVATO · COSA SAPERE, CONTROLLARE E DECIDERE
             </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-950 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight font-display">
               Capo Servizio
             </h1>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-slate-600 mt-1">
               Dati sincronizzati dalla Fonte Unica (Modello Completo) · Solo l'ultima revisione è valida
             </p>
           </div>
-          <div className="text-right font-mono text-xs text-slate-700 bg-slate-100 p-2.5 rounded border border-slate-300">
+          <div className="text-right font-mono text-xs text-slate-700 bg-slate-50 p-2.5 rounded-lg border border-slate-300">
             <div><strong>ODS n°:</strong> {ods.scheda.odsNumero}</div>
             <div><strong>{ods.scheda.revisioneCorrente}</strong> del {ods.scheda.dataRevisione}</div>
-            <div className="text-emerald-700 font-semibold mt-1">STATO OPERATIVO</div>
+            <div className="text-slate-950 font-semibold mt-1">STATO OPERATIVO</div>
           </div>
         </div>
       </div>
 
       {/* 1. Evento e Contatti */}
       <section className="mb-6">
-        <h2 className="text-sm font-bold uppercase tracking-wider bg-slate-900 text-white px-3 py-1.5 mb-3 flex items-center justify-between">
-          <span>1. Evento e Contatti Chiave</span>
-          <span className="text-xs font-normal opacity-80">Rapporto pax/addetto: {( (ods.scheda.ospitiAdulti + ods.scheda.ospitiBambiniSpeciali) / (ods.brigata.length || 1) ).toFixed(1)}</span>
+        <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-900 text-white px-3 py-2 mb-3 rounded-lg flex items-center justify-between">
+          <span>01. Evento e Contatti Chiave</span>
+          <span className="text-[11px] font-normal opacity-80 font-mono">Rapporto pax/addetto: {( (ods.scheda.ospitiAdulti + ods.scheda.ospitiBambiniSpeciali) / (ods.brigata.length || 1) ).toFixed(1)}</span>
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-          <div className="border border-slate-200 rounded p-3 bg-slate-50/50 space-y-2">
+          <div className="border border-slate-200 rounded-lg p-3.5 bg-slate-50/50 space-y-2">
             <div><span className="font-semibold text-slate-600">Evento:</span> <strong className="text-slate-900">{ods.scheda.eventoNomeTipo}</strong></div>
             <div><span className="font-semibold text-slate-600">Data:</span> <span className="font-mono">{ods.scheda.data}</span></div>
             <div><span className="font-semibold text-slate-600">Luogo:</span> {ods.scheda.luogoIndirizzo}</div>
-            <div className="grid grid-cols-2 gap-2 pt-1 border-t border-slate-200 font-mono">
+            <div className="grid grid-cols-2 gap-2 pt-1.5 border-t border-slate-200 font-mono">
               <div><span className="text-slate-500">Inizio:</span> <strong>{ods.scheda.inizioEvento}</strong></div>
               <div><span className="text-slate-500">Fine prevista:</span> <strong>{ods.scheda.fineEvento}</strong></div>
               <div><span className="text-slate-500">Ingresso Staff:</span> <strong>{ods.scheda.ingressoStaff}</strong></div>
               <div><span className="text-slate-500">Pax totali:</span> <strong>{ods.scheda.ospitiAdulti + ods.scheda.ospitiBambiniSpeciali}</strong></div>
             </div>
-            <div><span className="font-semibold text-slate-600">Formato:</span> <span className="uppercase font-mono text-emerald-800 font-bold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">{ods.scheda.formato.replace(/_/g, ' ')}</span></div>
+            <div><span className="font-semibold text-slate-600">Formato:</span> <span className="uppercase font-mono text-slate-900 font-bold bg-slate-200/80 px-2 py-0.5 rounded text-[11px]">{ods.scheda.formato.replace(/_/g, ' ')}</span></div>
           </div>
 
-          <div className="border border-slate-200 rounded p-3 bg-slate-50/50 space-y-2">
-            <h3 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">Numeri di Telefono Rapidi (Click to Call)</h3>
-            <div className="flex justify-between items-center py-1 border-b border-slate-100">
+          <div className="border border-slate-200 rounded-lg p-3.5 bg-slate-50/50 space-y-2">
+            <h3 className="font-bold text-slate-900 border-b border-slate-200 pb-1 mb-2">Numeri Rapidi (Click to Call)</h3>
+            <div className="flex justify-between items-center py-1 border-b border-slate-200/60">
               <span className="text-slate-700 font-medium">Committente ({committente?.nome || 'N/D'}):</span>
-              <a href={`tel:${committente?.telefono}`} className="font-mono text-emerald-700 font-bold hover:underline flex items-center">
-                <Phone className="w-3 h-3 mr-1" /> {committente?.telefono || '-'}
+              <a href={`tel:${committente?.telefono}`} className="font-mono text-slate-950 font-bold hover:underline flex items-center">
+                <Phone className="w-3 h-3 mr-1 text-slate-500" /> {committente?.telefono || '-'}
               </a>
             </div>
-            <div className="flex justify-between items-center py-1 border-b border-slate-100">
+            <div className="flex justify-between items-center py-1 border-b border-slate-200/60">
               <span className="text-slate-700 font-medium">Referente Loco ({referenteLocation?.nome || 'N/D'}):</span>
-              <a href={`tel:${referenteLocation?.telefono}`} className="font-mono text-emerald-700 font-bold hover:underline flex items-center">
-                <Phone className="w-3 h-3 mr-1" /> {referenteLocation?.telefono || '-'}
+              <a href={`tel:${referenteLocation?.telefono}`} className="font-mono text-slate-950 font-bold hover:underline flex items-center">
+                <Phone className="w-3 h-3 mr-1 text-slate-500" /> {referenteLocation?.telefono || '-'}
               </a>
             </div>
-            <div className="flex justify-between items-center py-1 border-b border-slate-100">
+            <div className="flex justify-between items-center py-1 border-b border-slate-200/60">
               <span className="text-slate-700 font-medium">Resp. Carico ({responsabileCarico?.nome || 'N/D'}):</span>
-              <a href={`tel:${responsabileCarico?.telefono}`} className="font-mono text-emerald-700 font-bold hover:underline flex items-center">
-                <Phone className="w-3 h-3 mr-1" /> {responsabileCarico?.telefono || '-'}
+              <a href={`tel:${responsabileCarico?.telefono}`} className="font-mono text-slate-950 font-bold hover:underline flex items-center">
+                <Phone className="w-3 h-3 mr-1 text-slate-500" /> {responsabileCarico?.telefono || '-'}
               </a>
             </div>
             <div className="flex justify-between items-center py-1">
               <span className="text-slate-700 font-medium">Capo Servizio ({capoServizio?.nome || ods.scheda.redattoDa}):</span>
-              <a href={`tel:${capoServizio?.telefono}`} className="font-mono text-emerald-700 font-bold hover:underline flex items-center">
-                <Phone className="w-3 h-3 mr-1" /> {capoServizio?.telefono || '-'}
+              <a href={`tel:${capoServizio?.telefono}`} className="font-mono text-slate-950 font-bold hover:underline flex items-center">
+                <Phone className="w-3 h-3 mr-1 text-slate-500" /> {capoServizio?.telefono || '-'}
               </a>
             </div>
           </div>
@@ -129,9 +129,9 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
 
       {/* 2. Fasi e Orari con Colonna Ora Reale */}
       <section className="mb-6">
-        <h2 className="text-sm font-bold uppercase tracking-wider bg-slate-900 text-white px-3 py-1.5 mb-2 flex items-center justify-between">
-          <span>2. Fasi e Orari (Compilazione Ora Reale Live)</span>
-          <span className="text-xs font-normal opacity-80">F1 - F9</span>
+        <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-900 text-white px-3 py-2 mb-2 rounded-lg flex items-center justify-between">
+          <span>02. Fasi e Orari (Compilazione Ora Reale Live)</span>
+          <span className="text-[11px] font-normal opacity-80 font-mono">F1 - F9</span>
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-left border-collapse border border-slate-300">
@@ -169,9 +169,9 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
 
       {/* 3. Brigata e Postazioni per Fase */}
       <section className="mb-6">
-        <h2 className="text-sm font-bold uppercase tracking-wider bg-slate-900 text-white px-3 py-1.5 mb-2 flex items-center justify-between">
-          <span>3. Brigata e Postazioni</span>
-          <span className="text-xs font-normal opacity-80">Assegnazioni per fase</span>
+        <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-900 text-white px-3 py-2 mb-2 rounded-lg flex items-center justify-between">
+          <span>03. Brigata e Postazioni</span>
+          <span className="text-[11px] font-normal opacity-80 font-mono">Assegnazioni operative per fase</span>
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-left border-collapse border border-slate-300">
@@ -196,7 +196,7 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
                   <tr key={p.codice} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/70'}>
                     <td className="p-2 border-t border-r border-slate-300 font-mono font-bold text-center text-slate-800">{p.codice}</td>
                     <td className="p-2 border-t border-r border-slate-300 font-semibold text-slate-900">{p.nome}</td>
-                    <td className="p-2 border-t border-r border-slate-300 text-emerald-900 font-medium">{resp}</td>
+                    <td className="p-2 border-t border-r border-slate-300 text-slate-900 font-medium">{resp}</td>
                     <td className="p-2 border-t border-r border-slate-300 text-slate-700">
                       <div className="font-mono text-slate-500">{p.faseA.orario}</div>
                       <div>{namesA || '-'}</div>
@@ -220,9 +220,9 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
       {/* 4. Controlli Prima dell'Evento & 5. Verifica Materiale Postazione */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         {/* Controlli Checklists */}
-        <section className="border border-slate-300 rounded p-4 bg-slate-50/30">
-          <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-800 text-white px-2.5 py-1 mb-3 rounded">
-            4. Controlli Prima dell'Evento
+        <section className="border border-slate-300 rounded-lg p-4 bg-slate-50/30">
+          <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-800 text-white px-3 py-1.5 mb-3 rounded">
+            04. Controlli Prima dell'Evento
           </h2>
 
           <div className="mb-4">
@@ -237,7 +237,7 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
                   className="flex items-center gap-3 text-left w-full hover:bg-slate-100 p-2.5 rounded-lg transition-colors min-h-[44px] border border-slate-200/60 bg-white shadow-2xs cursor-pointer"
                 >
                   {chk.completato ? (
-                    <CheckSquare className="w-5 h-5 text-emerald-600 shrink-0" />
+                    <CheckSquare className="w-5 h-5 text-slate-900 shrink-0" />
                   ) : (
                     <Square className="w-5 h-5 text-slate-400 shrink-0" />
                   )}
@@ -261,7 +261,7 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
                   className="flex items-center gap-3 text-left w-full hover:bg-slate-100 p-2.5 rounded-lg transition-colors min-h-[44px] border border-slate-200/60 bg-white shadow-2xs cursor-pointer"
                 >
                   {chk.completato ? (
-                    <CheckSquare className="w-5 h-5 text-emerald-600 shrink-0" />
+                    <CheckSquare className="w-5 h-5 text-slate-900 shrink-0" />
                   ) : (
                     <Square className="w-5 h-5 text-slate-400 shrink-0" />
                   )}
@@ -275,9 +275,9 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
         </section>
 
         {/* 5. Verifica Materiale per Postazione */}
-        <section className="border border-slate-300 rounded p-4 bg-slate-50/30">
-          <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-800 text-white px-2.5 py-1 mb-3 rounded">
-            5. Verifica Materiale per Postazione
+        <section className="border border-slate-300 rounded-lg p-4 bg-slate-50/30">
+          <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-800 text-white px-3 py-1.5 mb-3 rounded">
+            05. Verifica Materiale per Postazione
           </h2>
           <div className="overflow-x-auto">
             <table className="w-full text-xs text-left border-collapse border border-slate-300">
@@ -301,7 +301,7 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
                         type="checkbox"
                         checked={vm.materialeCompleto}
                         onChange={(e) => updateVerificaMateriale(vm.postazioneCod, 'materialeCompleto', e.target.checked)}
-                        className="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer"
+                        className="rounded text-slate-900 focus:ring-slate-900 w-4 h-4 cursor-pointer"
                       />
                     </td>
                     <td className="p-1 border-r border-slate-300">
@@ -318,7 +318,7 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
                         type="checkbox"
                         checked={vm.ok}
                         onChange={(e) => updateVerificaMateriale(vm.postazioneCod, 'ok', e.target.checked)}
-                        className="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer"
+                        className="rounded text-slate-900 focus:ring-slate-900 w-4 h-4 cursor-pointer"
                       />
                     </td>
                   </tr>
@@ -330,9 +330,9 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
       </div>
 
       {/* 6. Briefing Finale (Checklist 7 punti) */}
-      <section className="mb-6 border border-slate-300 rounded p-4 bg-slate-50/50">
-        <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-800 text-white px-2.5 py-1 mb-3 rounded flex items-center justify-between">
-          <span>6. Briefing Finale con la Brigata</span>
+      <section className="mb-6 border border-slate-300 rounded-lg p-4 bg-slate-50/50">
+        <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-800 text-white px-3 py-1.5 mb-3 rounded flex items-center justify-between">
+          <span>06. Briefing Finale con la Brigata</span>
           <span className="text-[11px] font-normal opacity-80">Prima dell'apertura porte</span>
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
@@ -343,7 +343,7 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
               className="flex items-center gap-3 text-left hover:bg-slate-100 p-2.5 rounded-lg transition-colors min-h-[44px] border border-slate-200/60 bg-white shadow-2xs cursor-pointer"
             >
               {chk.completato ? (
-                <CheckSquare className="w-5 h-5 text-emerald-600 shrink-0" />
+                <CheckSquare className="w-5 h-5 text-slate-900 shrink-0" />
               ) : (
                 <Square className="w-5 h-5 text-slate-400 shrink-0" />
               )}
@@ -357,8 +357,8 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
 
       {/* 7. Imprevisti Matrice Decisionale */}
       <section className="mb-6">
-        <h2 className="text-sm font-bold uppercase tracking-wider bg-slate-900 text-white px-3 py-1.5 mb-2">
-          7. Gestione Imprevisti (Protocollo Immediato)
+        <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-900 text-white px-3 py-2 mb-2 rounded-lg">
+          07. Gestione Imprevisti (Protocollo Immediato)
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-left border-collapse border border-slate-300">
@@ -411,10 +411,10 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
       </section>
 
       {/* 8. Chiusura Rapida */}
-      <section className="border-t-2 border-slate-900 pt-4">
-        <h2 className="text-sm font-bold uppercase tracking-wider bg-slate-900 text-white px-3 py-1.5 mb-3 flex items-center justify-between">
-          <span>8. Chiusura Rapida Post-Servizio</span>
-          <span className="text-xs font-normal opacity-80">Da trascrivere nella Sezione 10 entro 12h</span>
+      <section className="border-t-2 border-slate-900 pt-5">
+        <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-900 text-white px-3 py-2 mb-3 rounded-lg flex items-center justify-between">
+          <span>08. Chiusura Rapida Post-Servizio</span>
+          <span className="text-[11px] font-normal opacity-80 font-mono">Da trascrivere nella Sezione 10 entro 12h</span>
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs mb-3 font-mono">
           <div>

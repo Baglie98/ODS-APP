@@ -40,16 +40,16 @@ export const BrigataView: React.FC<BrigataViewProps> = ({ ods }) => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto my-6">
+    <div className="max-w-4xl mx-auto my-4 sm:my-6 px-3 sm:px-4">
       {/* Member Selector Bar (Hidden in print) */}
-      <div className="bg-neutral-900 border border-neutral-800 p-3 rounded-lg mb-6 flex flex-wrap items-center justify-between gap-3 no-print">
-        <div className="flex items-center gap-2">
-          <User className="w-4 h-4 text-emerald-400" />
-          <span className="text-xs text-neutral-300 font-medium">Seleziona membro della brigata:</span>
+      <div className="bg-[#0f172a] border border-slate-800 p-3 sm:p-4 rounded-xl mb-6 flex flex-wrap items-center justify-between gap-3 shadow-lg no-print">
+        <div className="flex items-center gap-2.5 flex-1 min-w-[240px]">
+          <User className="w-4 h-4 text-amber-400 shrink-0" />
+          <span className="text-xs text-slate-300 font-medium whitespace-nowrap">Membro brigata:</span>
           <select
             value={selectedMemberId}
             onChange={(e) => setSelectedMemberId(e.target.value)}
-            className="bg-neutral-950 border border-neutral-700 text-white text-xs rounded px-2.5 py-1 font-semibold focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer"
+            className="bg-slate-900 border border-slate-700 text-slate-100 text-xs rounded-lg px-3 py-1.5 font-semibold focus:outline-none focus:ring-1 focus:ring-amber-500 cursor-pointer flex-1 max-w-sm truncate"
           >
             {ods.brigata.map((m) => (
               <option key={m.id} value={m.id}>
@@ -62,38 +62,38 @@ export const BrigataView: React.FC<BrigataViewProps> = ({ ods }) => {
         <div className="flex items-center gap-2">
           <button
             onClick={copyForWhatsApp}
-            className="flex items-center gap-1.5 px-3 py-1 bg-emerald-950 text-emerald-300 border border-emerald-800/80 rounded text-xs font-semibold hover:bg-emerald-900/80 transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 text-amber-300 border border-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-750 transition-colors cursor-pointer"
             title="Copia testo formattato da inviare su WhatsApp o Telegram"
           >
-            {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+            {copied ? <Check className="w-3.5 h-3.5 text-amber-400" /> : <Copy className="w-3.5 h-3.5" />}
             <span>{copied ? 'Copiato!' : 'Copia per WhatsApp / SMS'}</span>
           </button>
           <button
             onClick={() => window.print()}
-            className="flex items-center gap-1.5 px-3 py-1 bg-neutral-800 text-neutral-200 border border-neutral-700 rounded text-xs font-semibold hover:bg-neutral-700 transition-colors"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-amber-400 text-slate-950 font-bold rounded-lg text-xs hover:bg-amber-300 transition-colors cursor-pointer shadow-sm"
           >
             <Printer className="w-3.5 h-3.5" />
-            <span>Stampa questo foglio</span>
+            <span>Stampa foglio</span>
           </button>
         </div>
       </div>
 
       {/* Official A4 Personal ODS Sheet */}
-      <div className="bg-white text-slate-900 shadow-sm border border-slate-200 rounded-lg p-6 sm:p-8 print:p-0 print:border-none print:shadow-none">
+      <div className="ods-paper rounded-xl p-6 sm:p-10 border border-slate-200/90 shadow-2xl print:p-0 print:border-none print:shadow-none font-sans">
         <div className="border-b-2 border-slate-900 pb-3 mb-5">
-          <div className="flex justify-between items-start">
+          <div className="flex justify-between items-start gap-4">
             <div>
               <span className="text-[11px] uppercase tracking-widest text-slate-500 font-bold block mb-1">
                 ORDINE DI SERVIZIO · FOGLIO PERSONALE (UNO PER OGNI PERSONA)
               </span>
-              <h1 className="text-2xl font-extrabold text-slate-950 tracking-tight">
-                Brigata
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight font-display">
+                Foglio Brigata
               </h1>
               <p className="text-xs text-slate-500 mt-0.5">
                 Dati copiati dal Modello Completo · Conservare e portare con sé durante il servizio
               </p>
             </div>
-            <div className="text-right font-mono text-xs text-slate-700 bg-slate-100 p-2 rounded border border-slate-300">
+            <div className="text-right font-mono text-xs text-slate-700 bg-slate-50 p-2.5 rounded-lg border border-slate-300">
               <div><strong>ODS n°:</strong> {ods.scheda.odsNumero}</div>
               <div>{ods.scheda.revisioneCorrente} · {ods.scheda.dataRevisione}</div>
             </div>
@@ -101,23 +101,23 @@ export const BrigataView: React.FC<BrigataViewProps> = ({ ods }) => {
         </div>
 
         {/* Member & Event Identity Matrix */}
-        <div className="border border-slate-300 rounded overflow-hidden text-xs mb-6">
+        <div className="border border-slate-300 rounded-lg overflow-hidden text-xs mb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 bg-slate-50 border-b border-slate-300">
-            <div className="p-2.5 border-r border-slate-300">
+            <div className="p-3 border-r border-slate-300">
               <span className="text-slate-500 font-medium block">Nome e cognome:</span>
               <span className="text-base font-bold text-slate-950">{foglio.member.cognomeNome}</span>
               {foglio.member.classeGruppo && <span className="text-slate-500 ml-2">({foglio.member.classeGruppo})</span>}
             </div>
-            <div className="p-2.5 flex items-center justify-between">
+            <div className="p-3 flex items-center justify-between">
               <div>
                 <span className="text-slate-500 font-medium block">Ruolo assegnato:</span>
-                <span className="text-sm font-bold uppercase text-emerald-800 font-mono">
+                <span className="text-sm font-bold uppercase text-slate-950 font-mono">
                   {foglio.member.ruolo.replace('_', ' ')} {foglio.member.ruoloDettaglio ? `· ${foglio.member.ruoloDettaglio}` : ''}
                 </span>
               </div>
               <div className="text-right font-mono">
                 <span className="text-slate-500 block">Stato:</span>
-                <span className="font-bold text-slate-800">{foglio.member.stato === 'C' ? 'Confermato (C)' : 'Da Confermare (DC)'}</span>
+                <span className="font-bold text-slate-900">{foglio.member.stato === 'C' ? 'Confermato (C)' : 'Da Confermare (DC)'}</span>
               </div>
             </div>
           </div>
@@ -137,7 +137,7 @@ export const BrigataView: React.FC<BrigataViewProps> = ({ ods }) => {
                 <div><strong className="text-slate-600 font-sans">Inizio evento:</strong> {foglio.scheda.inizioEvento}</div>
                 <div><strong className="text-slate-600 font-sans">Fine prevista:</strong> {foglio.scheda.fineEvento}</div>
               </div>
-              <div><strong className="text-slate-600">Turno orario individuale:</strong> <span className="font-mono font-bold text-slate-950 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">{foglio.member.turno}</span> ({foglio.member.oreTotali} ore tot.)</div>
+              <div><strong className="text-slate-600">Turno orario individuale:</strong> <span className="font-mono font-bold text-slate-950 bg-slate-100 px-2 py-0.5 rounded border border-slate-300">{foglio.member.turno}</span> ({foglio.member.oreTotali} ore tot.)</div>
               <div><strong className="text-slate-600">Divisa richiesta:</strong> <span className="text-slate-800">{foglio.divisa}</span></div>
             </div>
           </div>
@@ -145,7 +145,7 @@ export const BrigataView: React.FC<BrigataViewProps> = ({ ods }) => {
 
         {/* Il Mio Servizio Table */}
         <section className="mb-6">
-          <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-900 text-white px-3 py-1.5 mb-2 flex items-center justify-between">
+          <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-900 text-white px-3 py-2 mb-2 rounded-lg flex items-center justify-between">
             <span>Il Mio Servizio (Le Tue Assegnazioni per Fase)</span>
             <span className="text-[11px] font-normal opacity-80">Cambi solo su indicazione del responsabile</span>
           </h2>
@@ -178,7 +178,7 @@ export const BrigataView: React.FC<BrigataViewProps> = ({ ods }) => {
                       <td className="p-2 border-r border-slate-300 text-slate-700">
                         <div>{row.responsabileNome}</div>
                         {row.responsabileTel && (
-                          <div className="font-mono text-[11px] text-emerald-800">{row.responsabileTel}</div>
+                          <div className="font-mono text-[11px] text-slate-900 font-medium">{row.responsabileTel}</div>
                         )}
                       </td>
                       <td className="p-2 text-slate-800 font-medium">{row.cosaFaccio}</td>
@@ -195,29 +195,29 @@ export const BrigataView: React.FC<BrigataViewProps> = ({ ods }) => {
 
         {/* Chi Chiamare Matrix */}
         <section className="mb-6">
-          <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-900 text-white px-3 py-1.5 mb-2">
+          <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-900 text-white px-3 py-2 mb-2 rounded-lg">
             Chi Chiamare in Caso di Bisogno
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-            <div className="border border-slate-300 rounded p-2.5 bg-slate-50">
+            <div className="border border-slate-300 rounded-lg p-3 bg-slate-50">
               <span className="text-[11px] text-slate-500 block uppercase font-bold">Capo Servizio</span>
               <strong className="text-slate-900 block text-sm">{foglio.capoServizio.nome}</strong>
-              <a href={`tel:${foglio.capoServizio.telefono}`} className="text-emerald-700 font-mono font-bold flex items-center mt-1 hover:underline">
-                <Phone className="w-3 h-3 mr-1" /> {foglio.capoServizio.telefono || 'Nessun recapito'}
+              <a href={`tel:${foglio.capoServizio.telefono}`} className="text-slate-950 font-mono font-bold flex items-center mt-1.5 hover:underline">
+                <Phone className="w-3 h-3 mr-1 text-slate-500" /> {foglio.capoServizio.telefono || 'Nessun recapito'}
               </a>
             </div>
 
-            <div className="border border-slate-300 rounded p-2.5 bg-slate-50">
+            <div className="border border-slate-300 rounded-lg p-3 bg-slate-50">
               <span className="text-[11px] text-slate-500 block uppercase font-bold">Resp. della tua postazione</span>
               <strong className="text-slate-900 block text-sm">
                 {foglio.assignmentRows[0]?.responsabileNome || 'Capo Servizio'}
               </strong>
               {foglio.assignmentRows[0]?.responsabileTel ? (
-                <a href={`tel:${foglio.assignmentRows[0]?.responsabileTel}`} className="text-emerald-700 font-mono font-bold flex items-center mt-1 hover:underline">
-                  <Phone className="w-3 h-3 mr-1" /> {foglio.assignmentRows[0].responsabileTel}
+                <a href={`tel:${foglio.assignmentRows[0]?.responsabileTel}`} className="text-slate-950 font-mono font-bold flex items-center mt-1.5 hover:underline">
+                  <Phone className="w-3 h-3 mr-1 text-slate-500" /> {foglio.assignmentRows[0].responsabileTel}
                 </a>
               ) : (
-                <span className="text-slate-500 font-mono mt-1 block">Riferimento diretto in sala</span>
+                <span className="text-slate-500 font-mono mt-1.5 block">Riferimento diretto in sala</span>
               )}
             </div>
 
