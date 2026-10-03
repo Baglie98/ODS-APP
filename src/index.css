@@ -53,6 +53,21 @@
   box-shadow: 0 0 0 1px #0f172a;
 }
 
+/* iOS Safe Area Insets for iPhone Notch / Dynamic Island / Home Indicator */
+.pb-safe {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom, 1rem));
+}
+.pt-safe {
+  padding-top: max(0.75rem, env(safe-area-inset-top, 0.75rem));
+}
+
+@supports (-webkit-touch-callout: none) {
+  button, a {
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
 @media print {
   body {
     background-color: white !important;

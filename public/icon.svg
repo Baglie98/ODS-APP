@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#070a11"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef3c7"/>
+      <stop offset="30%" stop-color="#f59e0b"/>
+      <stop offset="70%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+    <linearGradient id="goldAccent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)"/>
+  
+  <!-- Outer Gold Border -->
+  <rect x="24" y="24" width="464" height="464" rx="96" fill="none" stroke="url(#goldGrad)" stroke-width="6" opacity="0.65"/>
+  <rect x="36" y="36" width="440" height="440" rx="84" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" stroke-dasharray="8 6" opacity="0.4"/>
+
+  <!-- Inner Crest / Cloche / Shield -->
+  <g filter="url(#shadow)" transform="translate(0, 10)">
+    <!-- Cloche dome handle -->
+    <circle cx="256" cy="130" r="14" fill="url(#goldGrad)"/>
+    <path d="M251 144 L261 144 L259 156 L253 156 Z" fill="url(#goldGrad)"/>
+
+    <!-- Cloche dome -->
+    <path d="M140 240 C140 165 190 156 256 156 C322 156 372 165 372 240 Z" fill="none" stroke="url(#goldGrad)" stroke-width="12" stroke-linecap="round"/>
+    
+    <!-- Cloche tray line -->
+    <path d="M116 244 L396 244" stroke="url(#goldGrad)" stroke-width="12" stroke-linecap="round"/>
+    <path d="M104 256 L408 256" stroke="url(#goldGrad)" stroke-width="6" stroke-linecap="round" opacity="0.8"/>
+
+    <!-- Stars -->
+    <g fill="url(#goldAccent)">
+      <polygon points="256,180 260,192 272,192 262,200 266,212 256,204 246,212 250,200 240,192 252,192"/>
+      <polygon points="210,190 213,199 222,199 215,205 218,214 210,208 202,214 205,205 198,199 207,199" transform="scale(0.8) translate(50, 45)"/>
+      <polygon points="302,190 305,199 314,199 307,205 310,214 302,208 294,214 297,205 290,199 299,199" transform="scale(0.8) translate(75, 45)"/>
+    </g>
+
+    <!-- ODS Monogram Text -->
+    <text x="256" y="348" text-anchor="middle" font-family="'Cinzel', 'Georgia', serif" font-weight="800" font-size="76" letter-spacing="14" fill="url(#goldGrad)">ODS</text>
+
+    <!-- Subtitle: CATERING MASTER -->
+    <text x="256" y="394" text-anchor="middle" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="20" letter-spacing="8" fill="#e2e8f0" opacity="0.9">CATERING MASTER</text>
+
+    <!-- Decorative flourishes below -->
+    <path d="M180 416 L230 416 M282 416 L332 416" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="256" cy="416" r="4" fill="url(#goldGrad)"/>
+  </g>
+</svg>

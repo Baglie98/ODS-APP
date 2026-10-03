@@ -43,6 +43,7 @@ export interface FaseTimeline {
   cosaSuccede: string;
   guidaResponsabile: string;
   oraReale?: string;
+  completata?: boolean;
   note?: string;
 }
 
@@ -92,6 +93,8 @@ export interface MembroBrigata {
   oreTotali: number;
   stato: StatusConferma;
   cellulare: string;
+  presenza?: 'presente' | 'in_ritardo' | 'assente' | 'non_ancora_arrivato';
+  notePresenza?: string;
 }
 
 export interface PostazioneFaseAssegnazione {
@@ -123,6 +126,7 @@ export interface AllergeneDieta {
   allergeneDieta: string;
   gestione: string; // chi prepara, come si riconosce il piatto
   respInSala: string;
+  consegnato?: boolean;
 }
 
 export interface FabbisognoVoce {
@@ -299,10 +303,12 @@ export interface ChiusuraEvento {
   paxRealiBambini: number;
   inizioReale: string;
   fineReale: string;
+  oraEffettivaChiusura?: string;
   assenzeSostituzioni: string;
   problemiOrario: string;
   consumi: ConsumoChiusura[];
   rottureDanni: RotturaDanno[];
+  rottureMancanze?: string;
   noleggiRestituiti: boolean;
   resiFornitoriFatti: boolean;
   materialeBaseRientratoContato: boolean;
@@ -347,6 +353,8 @@ export interface FornitoreNoleggioCheck {
   consegnaRitiro: string;
   verificatoInArrivo: boolean;
   restituito: boolean;
+  cosaFornisce?: string;
+  dataOraArrivo?: string;
 }
 
 export interface VerbaleCarico {
@@ -354,6 +362,12 @@ export interface VerbaleCarico {
   caricoBaseFirmaDataOra: string;
   ricezioneLocationFirmaDataOra: string;
   rientroBaseFirmaDataOra: string;
+  oraCaricoBase?: string;
+  firmaRespCaricoBase?: string;
+  oraScaricoLocation?: string;
+  oraCaricoRitorno?: string;
+  mancanzeRottureCarico?: string;
+  firmaConsegnaRitorno?: string;
 }
 
 // Full Master ODS Structure

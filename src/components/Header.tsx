@@ -14,8 +14,10 @@ import {
   Download,
   Upload,
   MoreVertical,
-  X
+  X,
+  RotateCcw
 } from 'lucide-react';
+import { PWAInstallButton } from './PWAInstallButton';
 
 export type ActiveTab = 'modello_completo' | 'capo_servizio' | 'brigata' | 'carico' | 'in_servizio';
 
@@ -31,6 +33,7 @@ interface HeaderProps {
   onDuplicateCurrentEvent?: () => void;
   onExportJSON?: () => void;
   onImportJSON?: (importedEvents: MasterODS[]) => void;
+  onResetSampleData?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -45,6 +48,7 @@ export const Header: React.FC<HeaderProps> = ({
   onDuplicateCurrentEvent,
   onExportJSON,
   onImportJSON,
+  onResetSampleData,
 }) => {
   const currentEvent = events.find((e) => e.id === currentEventId) || events[0];
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -154,6 +158,9 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           )}
 
+          {/* Install as iPhone / PWA WebApp Button */}
+          <PWAInstallButton />
+
           {/* New Event Button */}
           <button
             onClick={onOpenNewEvent}
@@ -235,6 +242,10 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
 
             <div className="space-y-2 text-xs">
+              <div className="pb-1">
+                <PWAInstallButton variant="prominent" className="w-full justify-center py-2.5" />
+              </div>
+
               <button
                 onClick={() => {
                   onPrintCurrentView();
@@ -315,6 +326,22 @@ export const Header: React.FC<HeaderProps> = ({
                     </div>
                   </button>
                 </div>
+              )}
+
+              {onResetSampleData && (
+                <button
+                  onClick={() => {
+                    onResetSampleData();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 p-3 bg-slate-900/90 hover:bg-slate-800 rounded-lg text-left font-medium min-h-[44px] border border-slate-800/80 cursor-pointer text-amber-300"
+                >
+                  <RotateCcw className="w-4 h-4 shrink-0" />
+                  <div>
+                    <div className="font-semibold">Ripristina Modelli ODS di Esempio</div>
+                    <div className="text-[11px] text-slate-400">Ricarica i format completi preimpostati (Buffet & Placé)</div>
+                  </div>
+                </button>
               )}
             </div>
           </div>

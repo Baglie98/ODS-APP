@@ -1,6 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MasterODS } from '../../types/ods';
-import { Phone, CheckSquare, Square, AlertCircle, ShieldAlert, Clock, Sparkles } from 'lucide-react';
+import { 
+  Phone, 
+  CheckSquare, 
+  Square, 
+  AlertCircle, 
+  ShieldAlert, 
+  Clock, 
+  Sparkles, 
+  CheckCircle2, 
+  Check, 
+  PlayCircle,
+  CheckCheck
+} from 'lucide-react';
 
 interface CapoServizioViewProps {
   ods: MasterODS;
@@ -8,6 +20,13 @@ interface CapoServizioViewProps {
 }
 
 export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdateODS }) => {
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(null), 2500);
+  };
+
   const committente = ods.contatti.find((c) => c.ruolo.toLowerCase().includes('committente'));
   const referenteLocation = ods.contatti.find((c) => c.ruolo.toLowerCase().includes('location') || c.ruolo.toLowerCase().includes('loco'));
   const responsabileCarico = ods.contatti.find((c) => c.ruolo.toLowerCase().includes('carico') || c.ruolo.toLowerCase().includes('logistica'));
@@ -20,9 +39,27 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
     onUpdateODS({ ...ods, controlliCapoServizio: updated });
   };
 
+  const segnaTuttiControlliTipo = (tipo: 'giorno_prima' | 'all_arrivo' | 'briefing') => {
+    const updated = ods.controlliCapoServizio.map((chk) =>
+      chk.tipo === tipo ? { ...chk, completato: true } : chk
+    );
+    onUpdateODS({ ...ods, controlliCapoServizio: updated });
+    const label = tipo === 'giorno_prima' ? 'del giorno prima' : tipo === 'all_arrivo' ? 'all\'arrivo' : 'del briefing';
+    showToast(`Controlli ${label} completati!`);
+  };
+
   const updateOraRealeFase = (codice: string, oraReale: string) => {
     const updated = ods.timelineFasi.map((f) => (f.codice === codice ? { ...f, oraReale } : f));
     onUpdateODS({ ...ods, timelineFasi: updated });
+  };
+
+  const segnaOraAdesso = (codice: string) => {
+    const now = new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+    const updated = ods.timelineFasi.map((f) => 
+      f.codice === codice ? { ...f, oraReale: now, completata: true } : f
+    );
+    onUpdateODS({ ...ods, timelineFasi: updated });
+    showToast(`${codice} registrata alle ${now}`);
   };
 
   const updateVerificaMateriale = (postazioneCod: string, field: 'materialeCompleto' | 'ok', val: boolean) => {
@@ -30,6 +67,17 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
       vm.postazioneCod === postazioneCod ? { ...vm, [field]: val } : vm
     );
     onUpdateODS({ ...ods, verificheMateriale: updated });
+  };
+
+  const segnaTuttoMaterialeOk = () => {
+    const updated = ods.verificheMateriale.map((vm) => ({
+      ...vm,
+      materialeCompleto: true,
+      ok: true,
+      mancanze: vm.mancanze || 'Tutto conforme',
+    }));
+    onUpdateODS({ ...ods, verificheMateriale: updated });
+    showToast('Tutte le postazioni verificate come conformi!');
   };
 
   const updateMancanzeText = (postazioneCod: string, mancanze: string) => {
@@ -53,17 +101,30 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
   const controlliAllArrivo = ods.controlliCapoServizio.filter((c) => c.tipo === 'all_arrivo');
   const controlliBriefing = ods.controlliCapoServizio.filter((c) => c.tipo === 'briefing');
 
+  const countGiornoPrima = controlliGiornoPrima.filter((c) => c.completato).length;
+  const countAllArrivo = controlliAllArrivo.filter((c) => c.completato).length;
+  const countBriefing = controlliBriefing.filter((c) => c.completato).length;
+  const countMaterialiOk = ods.verificheMateriale.filter((vm) => vm.ok).length;
+
   return (
     <div className="ods-paper rounded-xl p-6 sm:p-10 border border-slate-200/90 shadow-2xl max-w-5xl mx-auto my-4 sm:my-6 print:p-0 print:border-none print:shadow-none font-sans">
+      {/* Toast notification feedback */}
+      {toastMsg && (
+        <div className="fixed top-20 right-4 z-50 bg-slate-900 border border-amber-400 text-amber-200 px-4 py-2.5 rounded-xl text-xs font-bold shadow-2xl flex items-center gap-2 animate-bounce">
+          <Check className="w-4 h-4 text-amber-400" />
+          <span>{toastMsg}</span>
+        </div>
+      )}
+
       {/* Official Header */}
       <div className="border-b-2 border-slate-900 pb-4 mb-6">
-        <div className="flex justify-between items-start gap-4">
+        <div className="flex flex-wrap justify-between items-start gap-4">
           <div>
             <span className="text-[11px] uppercase tracking-widest text-slate-500 font-bold block mb-1">
               ORDINE DI SERVIZIO DERIVATO · COSA SAPERE, CONTROLLARE E DECIDERE
             </span>
             <h1 className="text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight font-display">
-              Capo Servizio
+              Capo Servizio (Executive Console)
             </h1>
             <p className="text-xs text-slate-600 mt-1">
               Dati sincronizzati dalla Fonte Unica (Modello Completo) · Solo l'ultima revisione è valida
@@ -72,7 +133,7 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
           <div className="text-right font-mono text-xs text-slate-700 bg-slate-50 p-2.5 rounded-lg border border-slate-300">
             <div><strong>ODS n°:</strong> {ods.scheda.odsNumero}</div>
             <div><strong>{ods.scheda.revisioneCorrente}</strong> del {ods.scheda.dataRevisione}</div>
-            <div className="text-slate-950 font-semibold mt-1">STATO OPERATIVO</div>
+            <div className="text-slate-950 font-semibold mt-1">STATO OPERATIVO ATTIVO</div>
           </div>
         </div>
       </div>
@@ -81,7 +142,9 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
       <section className="mb-6">
         <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-900 text-white px-3 py-2 mb-3 rounded-lg flex items-center justify-between">
           <span>01. Evento e Contatti Chiave</span>
-          <span className="text-[11px] font-normal opacity-80 font-mono">Rapporto pax/addetto: {( (ods.scheda.ospitiAdulti + ods.scheda.ospitiBambiniSpeciali) / (ods.brigata.length || 1) ).toFixed(1)}</span>
+          <span className="text-[11px] font-normal opacity-80 font-mono">
+            Rapporto pax/addetto: {((ods.scheda.ospitiAdulti + ods.scheda.ospitiBambiniSpeciali) / (ods.brigata.length || 1)).toFixed(1)}
+          </span>
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
           <div className="border border-slate-200 rounded-lg p-3.5 bg-slate-50/50 space-y-2">
@@ -127,7 +190,7 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
         </div>
       </section>
 
-      {/* 2. Fasi e Orari con Colonna Ora Reale */}
+      {/* 2. Fasi e Orari con Colonna Ora Reale & Azione Rapida */}
       <section className="mb-6">
         <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-900 text-white px-3 py-2 mb-2 rounded-lg flex items-center justify-between">
           <span>02. Fasi e Orari (Compilazione Ora Reale Live)</span>
@@ -141,7 +204,7 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
                 <th className="p-2 border-r border-slate-300 w-28">Inizio / Fine</th>
                 <th className="p-2 border-r border-slate-300">Cosa succede</th>
                 <th className="p-2 border-r border-slate-300 w-36">Guida (responsabile)</th>
-                <th className="p-2 w-28 bg-emerald-50 text-emerald-950 font-bold">Ora reale</th>
+                <th className="p-2 w-48 bg-amber-50/70 text-amber-950 font-bold">Ora Reale Live</th>
               </tr>
             </thead>
             <tbody>
@@ -151,14 +214,24 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
                   <td className="p-2 border-t border-r border-slate-300 font-mono">{f.inizio} - {f.fine}</td>
                   <td className="p-2 border-t border-r border-slate-300 font-medium text-slate-900">{f.cosaSuccede}</td>
                   <td className="p-2 border-t border-r border-slate-300 text-slate-700">{f.guidaResponsabile}</td>
-                  <td className="p-1 border-t border-slate-300 bg-emerald-50/50">
-                    <input
-                      type="text"
-                      placeholder="es. 16:10"
-                      value={f.oraReale || ''}
-                      onChange={(e) => updateOraRealeFase(f.codice, e.target.value)}
-                      className="w-full px-2 py-1 border border-emerald-300 rounded font-mono text-xs focus:ring-1 focus:ring-emerald-500 bg-white"
-                    />
+                  <td className="p-1.5 border-t border-slate-300 bg-amber-50/40">
+                    <div className="flex items-center gap-1.5">
+                      <input
+                        type="text"
+                        placeholder="--:--"
+                        value={f.oraReale || ''}
+                        onChange={(e) => updateOraRealeFase(f.codice, e.target.value)}
+                        className="w-20 px-2 py-1 border border-amber-300 rounded font-mono text-xs focus:ring-1 focus:ring-amber-500 bg-white font-bold text-center"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => segnaOraAdesso(f.codice)}
+                        className="px-2.5 py-1 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold rounded text-[11px] cursor-pointer shadow-2xs whitespace-nowrap"
+                        title="Registra l'ora esatta di adesso"
+                      >
+                        Adesso
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -221,14 +294,26 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         {/* Controlli Checklists */}
         <section className="border border-slate-300 rounded-lg p-4 bg-slate-50/30">
-          <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-800 text-white px-3 py-1.5 mb-3 rounded">
-            04. Controlli Prima dell'Evento
+          <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-800 text-white px-3 py-1.5 mb-3 rounded flex items-center justify-between">
+            <span>04. Controlli Prima dell'Evento</span>
+            <span className="font-mono text-[11px] font-normal opacity-90">
+              {countGiornoPrima + countAllArrivo} / {controlliGiornoPrima.length + controlliAllArrivo.length} eseguiti
+            </span>
           </h2>
 
           <div className="mb-4">
-            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide border-b border-slate-200 pb-1 mb-2">
-              Il giorno prima
-            </h3>
+            <div className="flex items-center justify-between border-b border-slate-200 pb-1 mb-2">
+              <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide">
+                Il giorno prima ({countGiornoPrima}/{controlliGiornoPrima.length})
+              </h3>
+              <button
+                type="button"
+                onClick={() => segnaTuttiControlliTipo('giorno_prima')}
+                className="text-[11px] text-amber-600 hover:text-amber-800 font-bold cursor-pointer"
+              >
+                Segna tutti OK
+              </button>
+            </div>
             <div className="space-y-2 text-xs">
               {controlliGiornoPrima.map((chk) => (
                 <button
@@ -237,7 +322,7 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
                   className="flex items-center gap-3 text-left w-full hover:bg-slate-100 p-2.5 rounded-lg transition-colors min-h-[44px] border border-slate-200/60 bg-white shadow-2xs cursor-pointer"
                 >
                   {chk.completato ? (
-                    <CheckSquare className="w-5 h-5 text-slate-900 shrink-0" />
+                    <CheckSquare className="w-5 h-5 text-emerald-600 shrink-0" />
                   ) : (
                     <Square className="w-5 h-5 text-slate-400 shrink-0" />
                   )}
@@ -250,9 +335,18 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
           </div>
 
           <div>
-            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide border-b border-slate-200 pb-1 mb-2">
-              All'arrivo in location
-            </h3>
+            <div className="flex items-center justify-between border-b border-slate-200 pb-1 mb-2">
+              <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide">
+                All'arrivo in location ({countAllArrivo}/{controlliAllArrivo.length})
+              </h3>
+              <button
+                type="button"
+                onClick={() => segnaTuttiControlliTipo('all_arrivo')}
+                className="text-[11px] text-amber-600 hover:text-amber-800 font-bold cursor-pointer"
+              >
+                Segna tutti OK
+              </button>
+            </div>
             <div className="space-y-2 text-xs">
               {controlliAllArrivo.map((chk) => (
                 <button
@@ -261,7 +355,7 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
                   className="flex items-center gap-3 text-left w-full hover:bg-slate-100 p-2.5 rounded-lg transition-colors min-h-[44px] border border-slate-200/60 bg-white shadow-2xs cursor-pointer"
                 >
                   {chk.completato ? (
-                    <CheckSquare className="w-5 h-5 text-slate-900 shrink-0" />
+                    <CheckSquare className="w-5 h-5 text-emerald-600 shrink-0" />
                   ) : (
                     <Square className="w-5 h-5 text-slate-400 shrink-0" />
                   )}
@@ -276,9 +370,19 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
 
         {/* 5. Verifica Materiale per Postazione */}
         <section className="border border-slate-300 rounded-lg p-4 bg-slate-50/30">
-          <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-800 text-white px-3 py-1.5 mb-3 rounded">
-            05. Verifica Materiale per Postazione
-          </h2>
+          <div className="flex items-center justify-between bg-slate-800 text-white px-3 py-1.5 mb-3 rounded">
+            <h2 className="text-xs font-bold uppercase tracking-wider">
+              05. Verifica Materiale per Postazione
+            </h2>
+            <button
+              type="button"
+              onClick={segnaTuttoMaterialeOk}
+              className="text-[11px] font-bold text-amber-300 hover:text-white cursor-pointer"
+            >
+              Segna Tutte OK ({countMaterialiOk}/{ods.verificheMateriale.length})
+            </button>
+          </div>
+
           <div className="overflow-x-auto">
             <table className="w-full text-xs text-left border-collapse border border-slate-300">
               <thead>
@@ -310,7 +414,7 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
                         value={vm.mancanze}
                         placeholder="Nessuna"
                         onChange={(e) => updateMancanzeText(vm.postazioneCod, e.target.value)}
-                        className="w-full px-1.5 py-1 border border-slate-200 rounded text-xs"
+                        className="w-full px-1.5 py-1 border border-slate-200 rounded text-xs bg-white"
                       />
                     </td>
                     <td className="p-1.5 text-center">
@@ -331,10 +435,18 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
 
       {/* 6. Briefing Finale (Checklist 7 punti) */}
       <section className="mb-6 border border-slate-300 rounded-lg p-4 bg-slate-50/50">
-        <h2 className="text-xs font-bold uppercase tracking-wider bg-slate-800 text-white px-3 py-1.5 mb-3 rounded flex items-center justify-between">
-          <span>06. Briefing Finale con la Brigata</span>
-          <span className="text-[11px] font-normal opacity-80">Prima dell'apertura porte</span>
-        </h2>
+        <div className="flex items-center justify-between bg-slate-800 text-white px-3 py-1.5 mb-3 rounded">
+          <h2 className="text-xs font-bold uppercase tracking-wider">
+            06. Briefing Finale con la Brigata (Prima dell'apertura porte)
+          </h2>
+          <button
+            type="button"
+            onClick={() => segnaTuttiControlliTipo('briefing')}
+            className="text-[11px] font-bold text-amber-300 hover:text-white cursor-pointer"
+          >
+            Spunta tutti i 7 punti ({countBriefing}/{controlliBriefing.length})
+          </button>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
           {controlliBriefing.map((chk) => (
             <button
@@ -343,7 +455,7 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
               className="flex items-center gap-3 text-left hover:bg-slate-100 p-2.5 rounded-lg transition-colors min-h-[44px] border border-slate-200/60 bg-white shadow-2xs cursor-pointer"
             >
               {chk.completato ? (
-                <CheckSquare className="w-5 h-5 text-slate-900 shrink-0" />
+                <CheckSquare className="w-5 h-5 text-emerald-600 shrink-0" />
               ) : (
                 <Square className="w-5 h-5 text-slate-400 shrink-0" />
               )}
@@ -423,7 +535,7 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
               type="number"
               value={ods.chiusura.paxRealiAdulti || ''}
               onChange={(e) => updateChiusuraRapida('paxRealiAdulti', parseInt(e.target.value) || 0)}
-              className="w-full px-2 py-1 border border-slate-300 rounded font-bold text-slate-900"
+              className="w-full px-2 py-1 border border-slate-300 rounded font-bold text-slate-900 bg-white"
             />
           </div>
           <div>
@@ -432,59 +544,48 @@ export const CapoServizioView: React.FC<CapoServizioViewProps> = ({ ods, onUpdat
               type="number"
               value={ods.chiusura.paxRealiBambini || ''}
               onChange={(e) => updateChiusuraRapida('paxRealiBambini', parseInt(e.target.value) || 0)}
-              className="w-full px-2 py-1 border border-slate-300 rounded font-bold text-slate-900"
+              className="w-full px-2 py-1 border border-slate-300 rounded font-bold text-slate-900 bg-white"
             />
           </div>
           <div>
-            <label className="text-slate-600 block text-[11px] font-sans">Inizio effettivo:</label>
+            <label className="text-slate-600 block text-[11px] font-sans">Ora effettiva chiusura:</label>
             <input
               type="text"
-              placeholder="es. 19:40"
-              value={ods.chiusura.inizioReale || ''}
-              onChange={(e) => updateChiusuraRapida('inizioReale', e.target.value)}
-              className="w-full px-2 py-1 border border-slate-300 rounded text-slate-900"
+              value={ods.chiusura.oraEffettivaChiusura || ''}
+              placeholder="es. 02:30"
+              onChange={(e) => updateChiusuraRapida('oraEffettivaChiusura', e.target.value)}
+              className="w-full px-2 py-1 border border-slate-300 rounded text-slate-900 bg-white"
             />
           </div>
           <div>
-            <label className="text-slate-600 block text-[11px] font-sans">Fine effettiva:</label>
+            <label className="text-slate-600 block text-[11px] font-sans">Data chiusura verbale:</label>
             <input
               type="text"
-              placeholder="es. 23:55"
-              value={ods.chiusura.fineReale || ''}
-              onChange={(e) => updateChiusuraRapida('fineReale', e.target.value)}
-              className="w-full px-2 py-1 border border-slate-300 rounded text-slate-900"
+              value={ods.chiusura.dataChiusura || ''}
+              onChange={(e) => updateChiusuraRapida('dataChiusura', e.target.value)}
+              className="w-full px-2 py-1 border border-slate-300 rounded text-slate-900 bg-white"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+        <div className="space-y-2 text-xs">
           <div>
-            <label className="text-slate-600 font-semibold block mb-1">Assenze e sostituzioni:</label>
-            <textarea
-              rows={2}
-              value={ods.chiusura.assenzeSostituzioni}
-              onChange={(e) => updateChiusuraRapida('assenzeSostituzioni', e.target.value)}
-              className="w-full p-1.5 border border-slate-300 rounded text-slate-800"
-              placeholder="Nessuna assenza..."
+            <label className="text-slate-600 block font-semibold mb-0.5">Rotture o mancanze riscontrate a fine servizio:</label>
+            <input
+              type="text"
+              placeholder="es. 4 calici rotti P2, 1 vassoio rigato..."
+              value={ods.chiusura.rottureMancanze || ''}
+              onChange={(e) => updateChiusuraRapida('rottureMancanze', e.target.value)}
+              className="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white text-slate-900"
             />
           </div>
           <div>
-            <label className="text-slate-600 font-semibold block mb-1">Rotture e mancanze veloci:</label>
-            <textarea
-              rows={2}
-              value={ods.chiusura.rottureDanni.map((r) => `${r.qta}x ${r.voce}`).join(', ') || 'Nessuna rottura'}
-              readOnly
-              className="w-full p-1.5 border border-slate-300 rounded text-slate-800 bg-slate-50"
-            />
-          </div>
-          <div>
-            <label className="text-slate-600 font-semibold block mb-1">Cosa cambiare la prossima volta:</label>
-            <textarea
-              rows={2}
-              value={ods.chiusura.cosaCambiareProssimaVolta}
-              onChange={(e) => updateChiusuraRapida('cosaCambiareProssimaVolta', e.target.value)}
-              className="w-full p-1.5 border border-slate-300 rounded text-slate-800"
-              placeholder="Appunti operativi..."
+            <label className="text-slate-600 block font-semibold mb-0.5">Firma Capo Servizio per presa in carico chiusura:</label>
+            <input
+              type="text"
+              value={ods.chiusura.capoServizioFirma || ''}
+              onChange={(e) => updateChiusuraRapida('capoServizioFirma', e.target.value)}
+              className="w-full px-2.5 py-1.5 border border-slate-300 rounded font-bold text-slate-950 bg-white"
             />
           </div>
         </div>

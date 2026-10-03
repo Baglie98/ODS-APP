@@ -2,20 +2,40 @@
 <html lang="it">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>ODS Catering Master - Gestione Ordini di Servizio</title>
     <meta name="description" content="Piattaforma a 360 gradi per direttori e capi servizio catering: ODS modello completo a fonte unica e generazione automatica degli ordini derivati per Capo Servizio, Brigata, Carico e In Servizio." />
+    
+    <!-- OpenGraph / Social Share -->
     <meta property="og:title" content="ODS Catering Master - Gestione Ordini di Servizio" />
     <meta property="og:description" content="Piattaforma a 360 gradi per direttori e capi servizio catering: ODS modello completo a fonte unica e generazione automatica degli ordini derivati." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- PWA & Mobile WebApp Capabilities -->
+    <meta name="theme-color" content="#0b0f19" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="ODS Catering" />
+    
+    <!-- iOS Safari WebApp Optimization -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="ODS Catering" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <!-- Standard & Vector Icons -->
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="alternate icon" type="image/png" href="/pwa-192x192.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   </head>
-  <body class="bg-[#0b0f19] text-slate-100 antialiased font-sans">
+  <body class="bg-[#0b0f19] text-slate-100 antialiased font-sans select-none sm:select-auto">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

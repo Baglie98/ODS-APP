@@ -11,6 +11,7 @@ import { InServizioView } from './components/views/InServizioView';
 import { NewEventModal } from './components/modals/NewEventModal';
 import { RevisionModal } from './components/modals/RevisionModal';
 import { MobileBottomNav } from './components/MobileBottomNav';
+import { OfflineIndicator } from './components/OfflineIndicator';
 
 export default function App() {
   const [events, setEvents] = useState<MasterODS[]>(() => {
@@ -83,12 +84,21 @@ export default function App() {
     setCurrentEventId(importedEvents[0].id);
   };
 
+  const handleResetSampleData = () => {
+    if (window.confirm('Vuoi ripristinare i modelli ODS di esempio originali (Buffet 200 pax e Placé Servito)?')) {
+      setEvents(sampleEvents);
+      setCurrentEventId(sampleEvents[0].id);
+      localStorage.setItem('ods_catering_events', JSON.stringify(sampleEvents));
+    }
+  };
+
   const handlePrint = () => {
     window.print();
   };
 
   return (
     <div className="min-h-screen bg-[#0b0f19] text-slate-100 flex flex-col font-sans selection:bg-amber-500/20 selection:text-amber-200">
+      <OfflineIndicator />
       {/* 3-Zone Top Navigation Contract */}
       <Header
         events={events}
@@ -102,6 +112,7 @@ export default function App() {
         onDuplicateCurrentEvent={handleDuplicateCurrentEvent}
         onExportJSON={handleExportJSON}
         onImportJSON={handleImportJSON}
+        onResetSampleData={handleResetSampleData}
       />
 
       {/* Real-time "Fonte Unica" Consistency & Integrity Audit Bar */}
@@ -118,7 +129,7 @@ export default function App() {
               <CapoServizioView ods={currentEvent} onUpdateODS={handleUpdateCurrentODS} />
             )}
             {activeTab === 'brigata' && (
-              <BrigataView ods={currentEvent} />
+              <BrigataView ods={currentEvent} onUpdateODS={handleUpdateCurrentODS} />
             )}
             {activeTab === 'carico' && (
               <CaricoFacchinaggioView ods={currentEvent} onUpdateODS={handleUpdateCurrentODS} />

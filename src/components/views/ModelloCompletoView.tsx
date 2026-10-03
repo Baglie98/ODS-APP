@@ -266,6 +266,34 @@ export const ModelloCompletoView: React.FC<ModelloCompletoViewProps> = ({ ods, o
               </span>
             </div>
 
+            {/* Calcolo Automatico Fabbisogno & Parametri Live */}
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-xs shadow-2xs">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-700">
+                  Calcolatore Automatico Dinamico Fabbisogno
+                </span>
+                <span className="text-[10px] text-slate-500 font-mono">Aggiornato in tempo reale sui pax</span>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono">
+                <div className="bg-white p-2 rounded-lg border border-slate-200">
+                  <span className="text-[10px] text-slate-500 block font-sans">Coperti Totali:</span>
+                  <strong className="text-slate-900 text-sm">{totalePax} pax</strong>
+                </div>
+                <div className="bg-white p-2 rounded-lg border border-slate-200">
+                  <span className="text-[10px] text-slate-500 block font-sans">Stima Vino (0.4 bot/pax):</span>
+                  <strong className="text-amber-700 text-sm">~{Math.round(totalePax * 0.4)} bottiglie</strong>
+                </div>
+                <div className="bg-white p-2 rounded-lg border border-slate-200">
+                  <span className="text-[10px] text-slate-500 block font-sans">Stima Acqua (0.75 L/pax):</span>
+                  <strong className="text-blue-700 text-sm">~{Math.round(totalePax * 0.75)} L</strong>
+                </div>
+                <div className="bg-white p-2 rounded-lg border border-slate-200">
+                  <span className="text-[10px] text-slate-500 block font-sans">Stima Calici (2.2/pax):</span>
+                  <strong className="text-purple-700 text-sm">~{Math.round(totalePax * 2.2)} calici</strong>
+                </div>
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs">
               <div>
                 <label className="text-slate-600 font-semibold block mb-1">ODS n°:</label>
